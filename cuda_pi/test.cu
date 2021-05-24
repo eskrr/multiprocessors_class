@@ -1,5 +1,6 @@
-#include<stdio.h>
-__global__ voidc_hello() {
+#include <stdio.h>
+
+__global__ void c_hello() {
 	printf("Hello World from the GPU!\n");
 }
 
