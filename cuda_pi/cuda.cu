@@ -21,7 +21,7 @@ __global__ void calculatePi(float* acums) {
    }
 }
 
-void main() {
+int main() {
    // Initialize host variables
    float *h_acums;
    int size = sizeof(float) * virtualCores;
@@ -50,4 +50,5 @@ void main() {
    end = clock();
 
    printf("Result = %20.18lf (%ld)\n", acum, end - start);
+   return 0;
 }
