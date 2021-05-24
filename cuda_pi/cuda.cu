@@ -1,23 +1,53 @@
 #include <stdio.h>
 #include <time.h>
 
-long cantidadIntervalos = 1000000000;
-double baseIntervalo;
-double fdx;
-double acum = 0;
-clock_t start, end;
+#define virtualCores 1000
+#define intervals 1000000000
+#define intervalsPerCore ((intervals)/(virtualCores))
+#define intervalBase ((1.0)/(intervals))
+
+__global__ void calculatePi(float* acums) {
+   int coreNum = threadIdx.x;
+
+   int currentInterval = coreNum * intervalsPerCore;
+   int lastInterval = currentInterval + intervalsPerCore;
+   double x = currentInterval * intervalBase;
+   double fdx;
+
+   for (; currentInterval < lastInterval; currentInterval++) {
+      fdx = 4 / (1 + x * x);
+      acums[coreNum] = acums[coreNum] + (fdx * intervalBase);
+      x = x + intervalBase;
+   }
+}
 
 void main() {
-   double x=0;
-   long i;
-   baseIntervalo = 1.0 / cantidadIntervalos;
+   // Initialize host variables
+   float *h_acums;
+   int size = sizeof(float) * virtualCores;
+
+   h_acums = (float *)malloc(size);
+
+   // Initialize device variables
+   float *d_acums;
+   cudaMalloc((void**)&d_acums, size);
+
+   clock_t start, end;
+
    start = clock();
-   for (i = 0; i < cantidadIntervalos; i++) {
-      x = (i+0.5)*baseIntervalo;
-      fdx = 4 / (1 + x * x);
-      acum += fdx;
+   calculatePi <<<1, virtualCores >>> (d_acums);
+
+   // Wait for device
+   cudaDeviceSynchronize();
+   cudaMemcpy(h_acums, d_acums, size, cudaMemcpyDeviceToHost);
+
+   int coreNum;
+   double acum = 0.0;
+   for (coreNum = 0; coreNum < virtualCores; coreNum++) {
+      acum += d_acums[coreNum];
    }
-   acum *= baseIntervalo;
+
    end = clock();
+
    printf("Result = %20.18lf (%ld)\n", acum, end - start);
 }
