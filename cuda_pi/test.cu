@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 __global__ void c_hello() {
-	printf("Hello World from the GPU!\n");
+	printf("Hello World from the GPU! (ThrIndex:%d)\n", threadIdx.x);
 }
 
 int main() {
