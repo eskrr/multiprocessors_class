@@ -44,7 +44,7 @@ int main() {
    int coreNum;
    double acum = 0.0;
    for (coreNum = 0; coreNum < virtualCores; coreNum++) {
-      acum += d_acums[coreNum];
+      acum += h_acums[coreNum];
    }
 
    end = clock();
