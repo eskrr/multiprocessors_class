@@ -29,11 +29,14 @@ int main(void)
    size_t size = BLOCKS * THREADS * sizeof(double);  //Array memory size
 
    // Memory allocation
-   h_sum = (double*)malloc(size);  //  Allocate array on host
    cudaMallocManaged(&sum, size);  // Allocate array on device
 
    // Initialize array in device to 0
    cudaMemset(sum, 0, size);
+
+   clock_t start, end;
+
+   start = clock();
 
    // Launch Kernel
    pi_calculation << <dimGrid, dimBlock >> > (sum, STEPS, base, THREADS, BLOCKS);
@@ -48,8 +51,10 @@ int main(void)
    // Multiply by base
    pi *= base;
 
+   end = clock();
+
    // Output Results
-   printf("PI = %.10f\n", pi);
+   printf("Result = %20.18lf (%ld)\n", pi, end - start);
 
    // Cleanup
    cudaFree(sum);
