@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
 	if (DEBUG)
 		printMatrix(*mC, 'C');
 
- 	totalTime = (double)(end - start) / CLOCKS_PER_SEC;
+ 	clock_t totalTime = (double)(end - start) / CLOCKS_PER_SEC;
     printf("Total time taken by CPU: %f\n",	totalTime); 
 
 	// if (DEBUG)
