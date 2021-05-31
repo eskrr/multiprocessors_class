@@ -42,8 +42,8 @@ int main(int argc, char *argv[]) {
 		int startPos = omp_get_thread_num() * workPerThread;
 		int endPos = startPos + workPerThread;
 
-		printf("Start pos: ", startPos);
-		printf("End pos: ", endPos);
+		printf("Start pos: %d\n", startPos);
+		printf("End pos: %d\n", endPos);
 
 
 	// 	#pragma omp master
