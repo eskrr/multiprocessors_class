@@ -105,16 +105,16 @@ double* matrixValue(const MATRIX matrix, const int row, const int col) {
 	return matrix.vals + matrix.cols * row + col;
 }
 
-void multiplyMatrix(const MATRIX mA, const MATRIX mB, MATRIX* mC) {
+void multiplyMatrix(
+	const int threadNum,
+	const int totalThreads,
+	const MATRIX mA,
+	const MATRIX mB,
+	MATRIX* mC) {
 	int n = mA.cols;
 	int row, col;
-	int cont = 0;
 	for (row = 0; row < mC->rows; row++) {
 		for (col = 0; col < mC->cols; col++) {
-			// int pos = 
-			// printf("%d", mC->rows * row + col);
-			// int i = 0;
-			// for ()
 			int i = 0;
 			double sum = 0.0;
 			for (; i < n; i++) {
@@ -125,8 +125,6 @@ void multiplyMatrix(const MATRIX mA, const MATRIX mB, MATRIX* mC) {
 				sum += valA * valB;
 
 			}
-			// printf("\n");
-			// printf("%d, %d = %lf\n", row, col, sum);
 
 			double* newVal = matrixValue(*mC, row, col);
 			*newVal = sum;
