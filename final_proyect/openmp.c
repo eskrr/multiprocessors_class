@@ -7,7 +7,7 @@
 
 #define DEBUG true
 
-int main(int argc, char *argv[])) {
+int main(int argc, char *argv[]) {
 	if (!verifyArgs(argc))
 		return false;
 
