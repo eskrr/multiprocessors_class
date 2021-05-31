@@ -55,6 +55,13 @@ int main(int argc, char *argv[]) {
 
 	printf("Time: %ld\n", end - start);
 
+	
+	printf("Verifying matrix... \n");
+
+	if (verifyMatrix(*mA, *mB, *mC)) {
+		printf("Matrix verified!!!\n");
+	}
+
 
 	// #pragma omp parallel for shared(mA, mB, mC)
 	// {
