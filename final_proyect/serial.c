@@ -12,9 +12,14 @@ int main(int argc, char *argv[]) {
 	if (!verifyArgs(argc))
 		return -1;
 
-	MATRIX* mA= initializeInputMatrix(
-		argv, MatrixAFileNameArgPos, MatrixARowsArgPos, MatrixAColsArgPos);
+	MATRIX* mA;
 
+	if  ((mA = initializeInputMatrix(
+			argv, MatrixAFileNameArgPos,
+			MatrixARowsArgPos, MatrixAColsArgPos)) == NULL) {
+		printf("Error allocating matrix A.\n");
+		return -1;
+	}
 
 	if (DEBUG)
 		printf("Reading matrix from: %s (rows: %d, cols: %d)\n",
@@ -23,21 +28,38 @@ int main(int argc, char *argv[]) {
 	if (!readMatrix(mA)) {
 		printf("Error reading matrix A from: %s\n", mA->fileName);
 	} else if (DEBUG) {
-		// printMatrix(*mA);
+		printMatrix(*mA, 'A');
 	}
 
-	// MATRIX mB;
-	// initializeInputMatrix(argv, MatrixBFileNameArgPos, MatrixBRowsArgPos, MatrixBColsArgPos, &mB);
+	MATRIX* mB;
 
-	// if (DEBUG)
-	// 	printf("Reading matrix from: %s (rows: %d, cols: %d)\n",
-	// 		mB.fileName, mB.rows, mB.cols);
+	if  ((mB = initializeInputMatrix(
+			argv, MatrixBFileNameArgPos,
+			MatrixBRowsArgPos, MatrixBColsArgPos)) == NULL) {
+		printf("Error allocating matrix B.\n");
+		return -1;
+	}
 
-	// if (!readMatrix(&mB)) {
-	// 	printf("Error reading matrix B from: %s\n", mB.fileName);
-	// } else if (DEBUG) {
-	// 	printMatrix(mB);
-	// }
+	if (DEBUG)
+		printf("Reading matrix from: %s (rows: %d, cols: %d)\n",
+			mB->fileName, mB->rows, mB->cols);
+
+	if (!readMatrix(mB)) {
+		printf("Error reading matrix B from: %s\n", mB->fileName);
+	} else if (DEBUG) {
+		printMatrix(*mB, 'B');
+	}
+
+	MATRIX* mC;
+
+	if  ((mC = initializeOutputMatrix(*mA, *mB)) == NULL) {
+		printf("Error allocating output matrix C.\n");
+		return -1;
+	}
+
+	multiplyMatrix(*mA, *mB, mC);
+
+	printMatrix(*mC, 'C');
 
 	// if (DEBUG)
 	// 	printf("Reading matrix from: %s (rows: %d, cols: %d)\n",
@@ -71,6 +93,8 @@ int main(int argc, char *argv[]) {
 	// if (DEBUG)
 	// 	printMatrix(*mB);
 	freeMatrix(mA);
+	freeMatrix(mB);
+	freeMatrix(mC);
 
 	return 0;
 }
