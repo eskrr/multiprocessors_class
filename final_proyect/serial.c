@@ -62,9 +62,9 @@ int main(int argc, char *argv[]) {
 	// }
 	// if (DEBUG)
 	// 	printMatrix(*mB);
-	// freeMatrix(mA);
-	// freeMatrix(mB);
-	// freeMatrix(mC);
+	freeMatrix(mA);
+	freeMatrix(mB);
+	freeMatrix(mC);
 
 	return 0;
 }
