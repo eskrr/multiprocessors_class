@@ -5,8 +5,9 @@
 #include <string.h>
 #include "matrix.h"
 
+#define DEBUG true
 
-int main() {
+int main(int argc, char *argv[])) {
 	if (!verifyArgs(argc))
 		return false;
 
