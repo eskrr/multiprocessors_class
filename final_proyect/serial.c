@@ -38,7 +38,8 @@ int main(int argc, char *argv[]) {
 	if (DEBUG)
 		printMatrix(*mC, 'C');
 
-	printf("Time: %ld\n", end - start);
+ 	totalTime = (double)(end - start) / CLOCKS_PER_SEC;
+    printf("Total time taken by CPU: %f\n",	totalTime); 
 
 	// if (DEBUG)
 	// 	printf("Reading matrix from: %s (rows: %d, cols: %d)\n",
