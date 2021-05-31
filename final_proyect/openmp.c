@@ -33,17 +33,25 @@ int main(int argc, char *argv[]) {
 
 	int workPerThread = totalWork / totalThreads;
 
-	#pragma omp parallel num_threads(totalThreads) shared(totalWork, workPerThread)
+	#pragma omp parallel num_threads(totalThreads) shared(totalWork, workPerThread, mA, mB, mC)
 	{
 		printf("Thread Id: %d\n", omp_get_thread_num());
-		printf("Total work: %d\n", totalWork);
-		printf("Work Per work: %d\n", workPerThread);
+		printf("Total Work: %d\n", totalWork);
+		printf("Work Per Thread: %d\n", workPerThread);
 
 		int startPos = omp_get_thread_num() * workPerThread;
 		int endPos = startPos + workPerThread;
 
-		printf("Start pos: %d\n", startPos);
-		printf("End pos: %d\n", endPos);
+		printf("Start Pos: %d\n", startPos);
+		printf("End Pos: %d\n", endPos);
+
+
+		multiplyMatrix(
+			/* startPos */ startPos,
+			/* endPos */ endPos,
+			/* matrix A */ *mA,
+			/* matrix B */ *mB,
+			/* matrix C */ mC);
 
 
 	// 	#pragma omp master
@@ -52,6 +60,8 @@ int main(int argc, char *argv[]) {
 	// 	}
 	// 	printf("Hello from thread = %d \n", omp_get_thread_num());
 	}
+
+	printMatrix(mC);
 	// printf("Max number of threads: %d", omp_get_max_threads());
 	// printf("Current number of threads: %d", OMP_NUM_THREADS);
 
