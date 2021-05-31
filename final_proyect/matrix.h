@@ -131,6 +131,35 @@ void multiplyMatrix(
 	}
 }
 
+bool verifyMatrix(
+	const MATRIX mA,
+	const MATRIX mB,
+	const MATRIX mC) {
+	int n = mA.cols;
+	int pos = 0;
+	for (; pos < mC.rows * mC.cols; pos++) {
+		int row = pos / mC.rows;
+		int col = pos % mC.cols;
+
+		double sum = 0.0;
+		int i = 0;
+		for (; i < n; i++) {
+			double valA, valB;
+			valA = *matrixValue(mA, row, i);
+			valB = *matrixValue(mB, i, col);
+
+			sum += valA * valB;
+		}
+
+		if (sum != *(mC.vals + pos)) {
+			printf("Error at: %d, %d\n", row, col);
+			return false;
+		}
+	}
+
+	return true;
+}
+
 bool initializeInputMatrixes(
 	int argc, char *argv[], MATRIX** mA, MATRIX** mB, bool DEBUG) {
 	if (!verifyArgs(argc))

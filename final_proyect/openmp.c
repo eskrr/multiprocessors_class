@@ -5,7 +5,9 @@
 #include <string.h>
 #include "matrix.h"
 
-#define DEBUG true
+#define DEBUG false
+
+clock_t start, end;
 
 int main(int argc, char *argv[]) {
 	if (!verifyArgs(argc))
@@ -33,40 +35,36 @@ int main(int argc, char *argv[]) {
 
 	int workPerThread = totalWork / totalThreads;
 
-	// #pragma omp parallel num_threads(totalThreads) shared(totalWork, workPerThread, mA, mB, mC)
-	// {
-	// 	printf("Thread Id: %d\n", omp_get_thread_num());
-	// 	printf("Total Work: %d\n", totalWork);
-	// 	printf("Work Per Thread: %d\n", workPerThread);
-
-	// 	int startPos = omp_get_thread_num() * workPerThread;
-	// 	int endPos = startPos + workPerThread;
-
-	// 	printf("Start Pos: %d\n", startPos);
-	// 	printf("End Pos: %d\n", endPos);
-
-
-	// 	multiplyMatrix(
-	// 		/* startPos */ startPos,
-	// 		/* endPos */ endPos,
-	// 		/* matrix A */ *mA,
-	// 		/* matrix B */ *mB,
-	// 		/* matrix C */ mC);
-	// }
-
-	#pragma omp parallel for shared(mA, mB, mC)
+	start = clock();
+	#pragma omp parallel num_threads(totalThreads) shared(totalWork, workPerThread, mA, mB, mC)
 	{
+		int startPos = omp_get_thread_num() * workPerThread;
+		int endPos = startPos + workPerThread;
+
 		multiplyMatrix(
-			/* startPos */ 0,
-			/* endPos */ mC->rows * mC->cols,
+			/* startPos */ startPos,
+			/* endPos */ endPos,
 			/* matrix A */ *mA,
 			/* matrix B */ *mB,
 			/* matrix C */ mC);
 	}
+    end = clock();
 
-	printMatrix(*mC, 'C');
-	// printf("Max number of threads: %d", omp_get_max_threads());
-	// printf("Current number of threads: %d", OMP_NUM_THREADS);
+	if (DEBUG)
+		printMatrix(*mC, 'C');
+
+	printf("Time: %ld\n", end - start);
+
+
+	// #pragma omp parallel for shared(mA, mB, mC)
+	// {
+	// 	multiplyMatrix(
+	// 		/* startPos */ 0,
+	// 		 endPos  mC->rows * mC->cols,
+	// 		/* matrix A */ *mA,
+	// 		/* matrix B */ *mB,
+	// 		/* matrix C */ mC);
+	// }
 
 	freeMatrix(mA);
 	freeMatrix(mB);

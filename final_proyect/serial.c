@@ -1,10 +1,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <time.h>
 #include <string.h>
 #include "matrix.h"
 
-#define DEBUG true
+#define DEBUG false
+
+clock_t start, end;
+
 
 int main(int argc, char *argv[]) {
 	if (!verifyArgs(argc))
@@ -21,15 +25,20 @@ int main(int argc, char *argv[]) {
 		printf("Error allocating output matrix C.\n");
 		return -1;
 	}
-
+   
+   	start = clock();
 	multiplyMatrix(
-		/* startPos */ 0,
-		/* endPos */ mC->rows * mC->cols,
-		/* matrix A */ *mA,
-		/* matrix B */ *mB,
-		/* matrix C */ mC);
+		/* startPos */ 	0,
+		/* endPos */ 	mC->rows * mC->cols,
+		/* matrix A */	*mA,
+		/* matrix B */ 	*mB,
+		/* matrix C */ 	mC);
+    end = clock();
 
-	printMatrix(*mC, 'C');
+	if (DEBUG)
+		printMatrix(*mC, 'C');
+
+	printf("Time: %ld\n", end - start);
 
 	// if (DEBUG)
 	// 	printf("Reading matrix from: %s (rows: %d, cols: %d)\n",
@@ -62,6 +71,12 @@ int main(int argc, char *argv[]) {
 	// }
 	// if (DEBUG)
 	// 	printMatrix(*mB);
+	printf("Verifying matrix... \n");
+
+	if (verifyMatrix(*mA, *mB, *mC)) {
+		printf("Matrix verified!!!\n");
+	}
+
 	freeMatrix(mA);
 	freeMatrix(mB);
 	freeMatrix(mC);
