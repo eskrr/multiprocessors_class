@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
 	// 	printf("Hello from thread = %d \n", omp_get_thread_num());
 	}
 
-	printMatrix(mC);
+	printMatrix(*mC, 'C');
 	// printf("Max number of threads: %d", omp_get_max_threads());
 	// printf("Current number of threads: %d", OMP_NUM_THREADS);
 
