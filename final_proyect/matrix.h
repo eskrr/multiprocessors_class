@@ -106,28 +106,71 @@ double* matrixValue(const MATRIX matrix, const int row, const int col) {
 }
 
 void multiplyMatrix(
-	const int threadNum,
-	const int totalThreads,
+	const int startPos,
+	const int endPos,
 	const MATRIX mA,
 	const MATRIX mB,
 	MATRIX* mC) {
 	int n = mA.cols;
-	int row, col;
-	for (row = 0; row < mC->rows; row++) {
-		for (col = 0; col < mC->cols; col++) {
-			int i = 0;
-			double sum = 0.0;
-			for (; i < n; i++) {
-				double valA, valB;
-				valA = *matrixValue(mA, row, i);
-				valB = *matrixValue(mB, i, col);
+	int pos = startPos;
+	for (; pos < mC->rows * mC->cols && pos < endPos; pos++) {
+		int row = pos / mC->rows;
+		int col = pos % mC->cols;
 
-				sum += valA * valB;
+		double sum = 0.0;
+		int i = 0;
+		for (; i < n; i++) {
+			double valA, valB;
+			valA = *matrixValue(mA, row, i);
+			valB = *matrixValue(mB, i, col);
 
-			}
-
-			double* newVal = matrixValue(*mC, row, col);
-			*newVal = sum;
+			sum += valA * valB;
 		}
+
+		*(mC->vals + pos) = sum;
 	}
+}
+
+bool initializeInputMatrixes(
+	int argc, char *argv[], MATRIX** mA, MATRIX** mB, bool DEBUG) {
+	if (!verifyArgs(argc))
+		return false;
+
+	if  ((*mA = initializeInputMatrix(
+			argv, MatrixAFileNameArgPos,
+			MatrixARowsArgPos, MatrixAColsArgPos)) == NULL) {
+		printf("Error allocating matrix A.\n");
+		return false;
+	}
+
+	if (DEBUG)
+		printf("Reading matrix from: %s (rows: %d, cols: %d)\n",
+			(*mA)->fileName, (*mA)->rows, (*mA)->cols);
+
+	if (!readMatrix(*mA)) {
+		printf("Error reading matrix A from: %s\n", (*mA)->fileName);
+		return false;
+	} else if (DEBUG) {
+		printMatrix(**mA, 'A');
+	}
+
+	if  ((*mB = initializeInputMatrix(
+			argv, MatrixBFileNameArgPos,
+			MatrixBRowsArgPos, MatrixBColsArgPos)) == NULL) {
+		printf("Error allocating matrix B.\n");
+		return false;
+	}
+
+	if (DEBUG)
+		printf("Reading matrix from: %s (rows: %d, cols: %d)\n",
+			(*mB)->fileName, (*mB)->rows, (*mB)->cols);
+
+	if (!readMatrix(*mB)) {
+		printf("Error reading matrix B from: %s\n", (*mB)->fileName);
+		return false;
+	} else if (DEBUG) {
+		printMatrix(**mB, 'B');
+	}
+
+	return true;
 }

@@ -24,7 +24,14 @@ int main(int argc, char *argv[]) {
 
 	multiplyMatrix(
 		/* startPos */ 0,
-		/* endPos */ mC->rows * mC->cols,
+		/* endPos */ 2,
+		/* matrix A */ *mA,
+		/* matrix B */ *mB,
+		/* matrix C */ mC);
+
+	multiplyMatrix(
+		/* startPos */ 2,
+		/* endPos */ 4,
 		/* matrix A */ *mA,
 		/* matrix B */ *mB,
 		/* matrix C */ mC);
