@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include "matrix.h"
 
-#define DEBUG TRUE
+#define DEBUG true
 
 void printDeviceInfo() {
 	int nDevices;
