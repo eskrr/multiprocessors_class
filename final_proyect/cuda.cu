@@ -32,14 +32,14 @@ int main(int argc, char *argv[]) {
 
 	printf("Inpit Matrix allocated\n");
 
-	MATRIX* mC;
+	// MATRIX* mC;
 
-	if  ((mC = initializeOutputMatrix(*mA, *mB, true)) == NULL) {
-		printf("Error allocating output matrix C.\n");
-		return -1;
-	}
+	// if  ((mC = initializeOutputMatrix(*mA, *mB, true)) == NULL) {
+	// 	printf("Error allocating output matrix C.\n");
+	// 	return -1;
+	// }
 
-	printf("Que pedo?\n");
+	// printf("Que pedo?\n");
 
 	// int *workPerThread;
 	// cudaMallocManaged(&workPerThread, sizeof(int));
