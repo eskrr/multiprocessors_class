@@ -60,11 +60,15 @@ int main(int argc, char *argv[]) {
 		return -1;
 	}
 
+	printf("Que pedo?\n");
+
 	int *workPerThread;
 	cudaMallocManaged(&workPerThread, sizeof(int));
+	printf("Que pedo2?\n");
 
 	int totalBlocks = mC->rows < MAX_BLOCKS ?  mC->rows : MAX_BLOCKS;
 	int totalRows = mC->cols < MAX_THREADS ?  mC->cols : MAX_THREADS;
+	printf("Que pedo4?\n");
 
 	int totalWork = mC->rows * mC->cols;
 	*workPerThread = totalWork / (totalBlocks * totalRows);
