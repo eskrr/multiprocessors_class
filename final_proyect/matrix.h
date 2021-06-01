@@ -17,15 +17,26 @@ typedef struct MATRIX {
 	int cols;
 } MATRIX;
 
-void freeMatrix(MATRIX* matrix) {
-	if (matrix == NULL)
-		return;
-	if (matrix->fileName != NULL)
-		free(matrix->fileName);
-	if (matrix->vals != NULL)
-		free(matrix->vals);
+void freeMatrix(MATRIX* matrix, const bool CUDA) {
+	if (CUDA) {
+		if (matrix == NULL)
+			return;
+		if (matrix->fileName != NULL)
+			free(matrix->fileName);
+		if (matrix->vals != NULL)
+			cudaFree(matrix->vals);
 
-	free(matrix);
+		cudaFree(matrix);
+	} else {
+		if (matrix == NULL)
+			return;
+		if (matrix->fileName != NULL)
+			free(matrix->fileName);
+		if (matrix->vals != NULL)
+			free(matrix->vals);
+
+		free(matrix);
+	}
 }
 
 bool verifyArgs(int totalArguments) {
@@ -39,8 +50,14 @@ bool verifyArgs(int totalArguments) {
 
 MATRIX* initializeOutputMatrix(
 	const MATRIX mA,
-	const MATRIX mB) {
-	MATRIX* output = (MATRIX *)malloc(sizeof(MATRIX));
+	const MATRIX mB,
+	const bool CUDA) {
+	MATRIX* output;
+	if (CUDA)
+		cudaMallocManaged(&output, sizeof(int));
+	else
+		output = (MATRIX *)malloc(sizeof(MATRIX));
+
 	if (mA.cols != mB.rows) {
 		printf("Number of cols of matrix A must be equal to number of rows in matrix B.\n");
 		return NULL;
@@ -50,15 +67,30 @@ MATRIX* initializeOutputMatrix(
 	output->rows = mA.rows;
 	output->cols = mB.cols;
 
-	output->vals = (double *)calloc(output->rows * output->cols, sizeof(double));
+
+	if (CUDA)
+		cudaMallocManaged(&output->vals, output->rows * output->cols * sizeof(double));
+	else
+		output->vals = (double *)calloc(output->rows * output->cols, sizeof(double));
+
+	if (output->vals == NULL) {
+		freeMatrix(output, CUDA);
+		return NULL;
+	}
 
 	return output;
 }
 
 MATRIX* initializeInputMatrix(
 	char *arguments[], const int fileNameArgPos,
-	const int rowsArgPos, const int colsArgPos) {
+	const int rowsArgPos, const int colsArgPos,
+	const bool CUDA) {
 	MATRIX* m = (MATRIX *)malloc(sizeof(MATRIX));
+	if (CUDA)
+		cudaMallocManaged(&m, sizeof(int));
+	else
+		m = (MATRIX *)malloc(sizeof(MATRIX));
+
 	if (m == NULL)
 		return NULL;
 
@@ -66,9 +98,14 @@ MATRIX* initializeInputMatrix(
 	m->rows = atoi(arguments[rowsArgPos]);
 	m->cols = atoi(arguments[colsArgPos]);
 
-	m->vals = (double *)calloc(m->rows * m->cols, sizeof(double));
+
+	if (CUDA)
+		cudaMallocManaged(&m->vals, m->rows * m->cols * sizeof(double));
+	else
+		m->vals = (double *)calloc(m->rows * m->cols, sizeof(double));
+
 	if (m->vals == NULL) {
-		freeMatrix(m);
+		freeMatrix(m, CUDA);
 		return NULL;
 	}
 

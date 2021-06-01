@@ -15,12 +15,12 @@ int main(int argc, char *argv[]) {
 		return false;
 
 	MATRIX *mA, *mB;
-	if (!initializeInputMatrixes(argc, argv, &mA, &mB, DEBUG))
+	if (!initializeInputMatrixes(argc, argv, &mA, &mB, DEBUG, true))
 		return -1;
 
 	MATRIX* mC;
 
-	if  ((mC = initializeOutputMatrix(*mA, *mB)) == NULL) {
+	if  ((mC = initializeOutputMatrix(*mA, *mB, true)) == NULL) {
 		printf("Error allocating output matrix C.\n");
 		return -1;
 	}
