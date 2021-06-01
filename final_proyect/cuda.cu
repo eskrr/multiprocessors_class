@@ -53,6 +53,8 @@ int main(int argc, char *argv[]) {
 		printf("Error allocating input matrixes.\n");
 		return -1;
 
+	printf("Inpit Matrix allocated\n");
+
 	MATRIX* mC;
 
 	if  ((mC = initializeOutputMatrix(*mA, *mB, true)) == NULL) {
