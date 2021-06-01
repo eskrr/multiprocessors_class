@@ -25,45 +25,38 @@ int main(int argc, char *argv[]) {
 	if (!verifyArgs(argc))
 		return false;
 
-	printf("Before: \n");
 	MATRIX *mA, *mB;
-	if (!initializeInputMatrixes(argc, argv, &mA, &mB, DEBUG, true))
+	if (!initializeInputMatrixes(argc, argv, &mA, &mB, DEBUG, true)) {
 		printf("Error allocating input matrixes.\n");
 		return -1;
+	}
 
-	printf("Inpit Matrix allocated\n");
+	MATRIX* mC;
 
-	// MATRIX* mC;
+	if  ((mC = initializeOutputMatrix(*mA, *mB, true)) == NULL) {
+		printf("Error allocating output matrix C.\n");
+		return -1;
+	}
 
-	// if  ((mC = initializeOutputMatrix(*mA, *mB, true)) == NULL) {
-	// 	printf("Error allocating output matrix C.\n");
-	// 	return -1;
-	// }
+	int *workPerThread;
+	cudaMallocManaged(&workPerThread, sizeof(int));
 
-	// printf("Que pedo?\n");
+	int totalBlocks = mC->rows < MAX_BLOCKS ?  mC->rows : MAX_BLOCKS;
+	int totalRows = mC->cols < MAX_THREADS ?  mC->cols : MAX_THREADS;
 
-	// int *workPerThread;
-	// cudaMallocManaged(&workPerThread, sizeof(int));
-	// printf("Que pedo2?\n");
+	int totalWork = mC->rows * mC->cols;
+	*workPerThread = totalWork / (totalBlocks * totalRows);
 
-	// int totalBlocks = mC->rows < MAX_BLOCKS ?  mC->rows : MAX_BLOCKS;
-	// int totalRows = mC->cols < MAX_THREADS ?  mC->cols : MAX_THREADS;
-	// printf("Que pedo4?\n");
+	printf("totalBlocks: %d, totalRows: %d\n", totalBlocks, totalRows);
 
-	// int totalWork = mC->rows * mC->cols;
-	// *workPerThread = totalWork / (totalBlocks * totalRows);
+	start = clock();
+	calculateMatrixCuda <<<totalBlocks, totalRows>>> (workPerThread, mA, mB, mC);
+	cudaDeviceSynchronize();
+	end = clock();
 
-	// printf("totalBlocks: %d, totalRows: %d\n", totalBlocks, totalRows);
+ 	// double totalTime = (double)(end - start) / CLOCKS_PER_SEC;
+    printf("Total time taken by CPU: %lf\n", end - start); 
 
-	// start = clock();
-	// calculateMatrixCuda <<<totalBlocks, totalRows>>> (workPerThread, mA, mB, mC);
-	// cudaDeviceSynchronize();
-	// end = clock();
-
- // 	// double totalTime = (double)(end - start) / CLOCKS_PER_SEC;
- //    printf("Total time taken by CPU: %lf\n", end - start); 
-
-	// printf("Verifying matrix... \n");
-	//Needed for output.
+	printf("Verifying matrix... \n");
 	return 0;
 }
