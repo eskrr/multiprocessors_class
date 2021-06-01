@@ -25,7 +25,8 @@ void printDeviceInfo() {
 }
 
 __global__ void c_hello() {
-	printf("Hello World from the GPU! (ThrIndex:%d)\n", threadIdx.x);
+	int idx = blockIdx.x * blockDim.x + threadIdx.x;  // Calculate index for each thread
+	printf("Hello World from the GPU! (ThrIndex:%d)\n", idx);
 }
 
 int main(int argc, char *argv[]) {
