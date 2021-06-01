@@ -51,12 +51,13 @@ int main(int argc, char *argv[]) {
 	}
 
 	int *workPerThread;
-	cudaMallocManaged(&workPerThread, size(int));
-	int totalWork = mC->rows * mC;
-	*workPerThread = totalWork / totalThreads;
+	cudaMallocManaged(&workPerThread, sizeof(int));
 
 	int totalBlocks = mC->rows < MAX_BLOCKS ?  mC->rows : MAX_BLOCKS;
 	int totalRows = mC->cols < MAX_THREADS ?  mC->cols : MAX_THREADS;
+
+	int totalWork = mC->rows * mC->cols;
+	*workPerThread = totalWork / (totalBlocks * totalRows);
 
 	calculateMatrixCuda <<<totalBlocks, totalRows>>> (workPerThread);
 	cudaDeviceSynchronize();
