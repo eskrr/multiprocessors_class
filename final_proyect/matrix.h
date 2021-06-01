@@ -40,7 +40,7 @@ bool verifyArgs(int totalArguments) {
 MATRIX* initializeOutputMatrix(
 	const MATRIX mA,
 	const MATRIX mB) {
-	MATRIX* output = malloc(sizeof(MATRIX));
+	MATRIX* output = (MATRIX *)malloc(sizeof(MATRIX));
 	if (mA.cols != mB.rows) {
 		printf("Number of cols of matrix A must be equal to number of rows in matrix B.\n");
 		return NULL;
@@ -58,7 +58,7 @@ MATRIX* initializeOutputMatrix(
 MATRIX* initializeInputMatrix(
 	char *arguments[], const int fileNameArgPos,
 	const int rowsArgPos, const int colsArgPos) {
-	MATRIX* m = malloc(sizeof(MATRIX));
+	MATRIX* m = (MATRIX *)malloc(sizeof(MATRIX));
 	if (m == NULL)
 		return NULL;
 
