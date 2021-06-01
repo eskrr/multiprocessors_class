@@ -239,6 +239,7 @@ bool initializeInputMatrixes(
 	} else if (DEBUG) {
 		printMatrix(**mB, 'B');
 	}
+	printf("Hola\n\n!!\n");
 
 	return true;
 }
