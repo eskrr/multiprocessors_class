@@ -69,6 +69,8 @@ int main(int argc, char *argv[]) {
 	int totalWork = mC->rows * mC->cols;
 	*workPerThread = totalWork / (totalBlocks * totalRows);
 
+	printf("totalBlocks: %d, totalRows: %d\n", totalBlocks, totalRows);
+
 	start = clock();
 	calculateMatrixCuda <<<totalBlocks, totalRows>>> (workPerThread, mA, mB, mC);
 	cudaDeviceSynchronize();
