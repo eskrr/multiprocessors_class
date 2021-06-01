@@ -25,6 +25,7 @@ int main(int argc, char *argv[]) {
 	if (!verifyArgs(argc))
 		return false;
 
+	printf("Before: \n");
 	MATRIX *mA, *mB;
 	if (!initializeInputMatrixes(argc, argv, &mA, &mB, DEBUG, true))
 		printf("Error allocating input matrixes.\n");
