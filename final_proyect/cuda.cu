@@ -3,6 +3,8 @@
 #include "matrix.h"
 
 #define DEBUG true
+#define MAX_THREADS 2014
+#define MAX_BLOCKS 1024
 
 void printDeviceInfo() {
 	int nDevices;
@@ -24,9 +26,10 @@ void printDeviceInfo() {
 	}
 }
 
-__global__ void c_hello() {
+__global__ void calculateMatrixCuda(int *workPerThread) {
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;  // Calculate index for each thread
-	printf("Hello World from the GPU! (ThrIndex:%d)\n", idx);
+
+	printf("(ThreadId: %d, WorkPerThread: %d)\n", idx, *workPerThread);
 }
 
 int main(int argc, char *argv[]) {
@@ -47,9 +50,15 @@ int main(int argc, char *argv[]) {
 		return -1;
 	}
 
-	printf("Answer size: %d, %d\n", mC->rows, mC->cols);
+	int *workPerThread;
+	cudaMallocManaged(&workPerThread, size(int));
+	int totalWork = mC->rows * mC;
+	*workPerThread = totalWork / totalThreads;
 
-	c_hello <<<10 ,10>>>();
+	int totalBlocks = mC->rows < MAX_BLOCKS ?  mC->rows : MAX_BLOCKS;
+	int totalRows = mC->cols < MAX_THREADS ?  mC->cols : MAX_THREADS;
+
+	calculateMatrixCuda <<<totalBlocks, totalRows>>> (workPerThread);
 	cudaDeviceSynchronize();
 	//Needed for output.
 	return 0;

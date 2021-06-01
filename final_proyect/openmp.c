@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
 	int workPerThread = totalWork / totalThreads;
 
 	start = clock();
-	#pragma omp parallel num_threads(totalThreads) shared(totalWork, workPerThread, mA, mB, mC)
+	#pragma omp parallel num_threads(totalThreads) shared(workPerThread, mA, mB, mC)
 	{
 		int startPos = omp_get_thread_num() * workPerThread;
 		int endPos = startPos + workPerThread;
