@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
 		printMatrix(*mC, 'C');
 
  	double totalTime = (double)(end - start) / CLOCKS_PER_SEC;
-    printf("Total time taken by CPU: %lf\n", totalTime); 
+    printf("Total time taken by CPU: %lf\n", end - start); 
 
 	printf("Verifying matrix... \n");
 
