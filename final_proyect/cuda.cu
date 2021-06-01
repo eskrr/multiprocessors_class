@@ -64,28 +64,28 @@ int main(int argc, char *argv[]) {
 
 	printf("Que pedo?\n");
 
-	int *workPerThread;
-	cudaMallocManaged(&workPerThread, sizeof(int));
-	printf("Que pedo2?\n");
+	// int *workPerThread;
+	// cudaMallocManaged(&workPerThread, sizeof(int));
+	// printf("Que pedo2?\n");
 
-	int totalBlocks = mC->rows < MAX_BLOCKS ?  mC->rows : MAX_BLOCKS;
-	int totalRows = mC->cols < MAX_THREADS ?  mC->cols : MAX_THREADS;
-	printf("Que pedo4?\n");
+	// int totalBlocks = mC->rows < MAX_BLOCKS ?  mC->rows : MAX_BLOCKS;
+	// int totalRows = mC->cols < MAX_THREADS ?  mC->cols : MAX_THREADS;
+	// printf("Que pedo4?\n");
 
-	int totalWork = mC->rows * mC->cols;
-	*workPerThread = totalWork / (totalBlocks * totalRows);
+	// int totalWork = mC->rows * mC->cols;
+	// *workPerThread = totalWork / (totalBlocks * totalRows);
 
-	printf("totalBlocks: %d, totalRows: %d\n", totalBlocks, totalRows);
+	// printf("totalBlocks: %d, totalRows: %d\n", totalBlocks, totalRows);
 
-	start = clock();
-	calculateMatrixCuda <<<totalBlocks, totalRows>>> (workPerThread, mA, mB, mC);
-	cudaDeviceSynchronize();
-	end = clock();
+	// start = clock();
+	// calculateMatrixCuda <<<totalBlocks, totalRows>>> (workPerThread, mA, mB, mC);
+	// cudaDeviceSynchronize();
+	// end = clock();
 
- 	// double totalTime = (double)(end - start) / CLOCKS_PER_SEC;
-    printf("Total time taken by CPU: %lf\n", end - start); 
+ // 	// double totalTime = (double)(end - start) / CLOCKS_PER_SEC;
+ //    printf("Total time taken by CPU: %lf\n", end - start); 
 
-	printf("Verifying matrix... \n");
+	// printf("Verifying matrix... \n");
 	//Needed for output.
 	return 0;
 }
