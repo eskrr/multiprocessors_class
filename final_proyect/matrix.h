@@ -200,13 +200,13 @@ bool verifyMatrix(
 }
 
 bool initializeInputMatrixes(
-	int argc, char *argv[], MATRIX** mA, MATRIX** mB, bool DEBUG) {
+	int argc, char *argv[], MATRIX** mA, MATRIX** mB, bool DEBUG, bool CUDA) {
 	if (!verifyArgs(argc))
 		return false;
 
 	if  ((*mA = initializeInputMatrix(
 			argv, MatrixAFileNameArgPos,
-			MatrixARowsArgPos, MatrixAColsArgPos)) == NULL) {
+			MatrixARowsArgPos, MatrixAColsArgPos,CUDA)) == NULL) {
 		printf("Error allocating matrix A.\n");
 		return false;
 	}
@@ -224,7 +224,7 @@ bool initializeInputMatrixes(
 
 	if  ((*mB = initializeInputMatrix(
 			argv, MatrixBFileNameArgPos,
-			MatrixBRowsArgPos, MatrixBColsArgPos)) == NULL) {
+			MatrixBRowsArgPos, MatrixBColsArgPos,CUDA)) == NULL) {
 		printf("Error allocating matrix B.\n");
 		return false;
 	}
