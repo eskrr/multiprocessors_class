@@ -31,10 +31,11 @@ void printDeviceInfo() {
 
 __global__ void calculateMatrixCuda(int *workPerThread) {
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;  // Calculate index for each thread
-	// int startPos = idx * *workPerThread;
-	// int endPos = startPos + *workPerThread;
+	int startPos = idx * *workPerThread;
+	int endPos = startPos + *workPerThread;
 
-	// printf("(ThreadId: %d, WorkPerThread: %d)\n", idx, *workPerThread);
+	printf("(ThreadId: %d, WorkPerThread: %d)\n", idx, *workPerThread);
+	printf("(start: %d, end: %d)\n", startPos, endPos);
 }
 
 int main(int argc, char *argv[]) {
