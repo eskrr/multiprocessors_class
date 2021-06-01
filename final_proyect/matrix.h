@@ -114,6 +114,7 @@ void multiplyMatrix(
 	int n = mA.cols;
 	int pos = startPos;
 	for (; pos < mC->rows * mC->cols && pos < endPos; pos++) {
+		asm nop;
 		int row = pos / mC->rows;
 		int col = pos % mC->cols;
 
