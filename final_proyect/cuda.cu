@@ -7,9 +7,10 @@
 void printDeviceInfo() {
 	int nDevices;
 	cudaGetDeviceCount(&nDevices);
-	for(inti = 0; i < nDevices; i++) {
-		cudaDeviceProp prop;c
-		udaGetDeviceProperties(&prop, i);
+	int i = 0;
+	for(i = 0; i < nDevices; i++) {
+		cudaDeviceProp prop;
+		cudaGetDeviceProperties(&prop, i);
 		printf("Device Number: %d\n", i);
 		printf("  Device name: %s\n", prop.name);
 		printf("  Maximum number of 32-bit registers: %d\n", prop.regsPerBlock);

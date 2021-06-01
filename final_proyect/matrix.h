@@ -50,7 +50,7 @@ MATRIX* initializeOutputMatrix(
 	output->rows = mA.rows;
 	output->cols = mB.cols;
 
-	output->vals = calloc(output->rows * output->cols, sizeof(double));
+	output->vals = (double *)calloc(output->rows * output->cols, sizeof(double));
 
 	return output;
 }
@@ -66,7 +66,7 @@ MATRIX* initializeInputMatrix(
 	m->rows = atoi(arguments[rowsArgPos]);
 	m->cols = atoi(arguments[colsArgPos]);
 
-	m->vals = calloc(m->rows * m->cols, sizeof(double));
+	m->vals = (double *)calloc(m->rows * m->cols, sizeof(double));
 	if (m->vals == NULL) {
 		freeMatrix(m);
 		return NULL;
