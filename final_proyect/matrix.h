@@ -142,7 +142,7 @@ double* matrixValue(const MATRIX matrix, const int row, const int col) {
 	return matrix.vals + matrix.cols * row + col;
 }
 
-void multiplyMatrix(
+__global__ void multiplyMatrix(
 	const int startPos,
 	const int endPos,
 	const MATRIX mA,
