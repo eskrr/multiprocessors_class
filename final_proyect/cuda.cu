@@ -14,11 +14,17 @@ __global__ void calculateMatrixCuda(int *workPerThread, MATRIX* mA, MATRIX* mB, 
 	int startPos = idx * *workPerThread;
 	int endPos = startPos + *workPerThread;
 
-	printf("(ThreadId: %d, WorkPerThread: %d)\n", idx, *workPerThread);
-	printf("(start: %d, end: %d)\n", startPos, endPos);
-	printf("mA: rows: %d, cols: %d\n", mA->rows, mA->cols);
-	printf("mB: rows: %d, cols: %d\n", mB->rows, mB->cols);
-	printf("mC: rows: %d, cols: %d\n", mC->rows, mC->cols);
+	multiplyMatrix(
+		/* startPos */ startPos,
+		/* endPos */ endPos,
+		/* matrix A */ *mA,
+		/* matrix B */ *mB,
+		/* matrix C */ mC);
+	// printf("(ThreadId: %d, WorkPerThread: %d)\n", idx, *workPerThread);
+	// printf("(start: %d, end: %d)\n", startPos, endPos);
+	// printf("mA: rows: %d, cols: %d\n", mA->rows, mA->cols);
+	// printf("mB: rows: %d, cols: %d\n", mB->rows, mB->cols);
+	// printf("mC: rows: %d, cols: %d\n", mC->rows, mC->cols);
 }
 
 int main(int argc, char *argv[]) {
@@ -53,6 +59,9 @@ int main(int argc, char *argv[]) {
 	calculateMatrixCuda <<<totalBlocks, totalRows>>> (workPerThread, mA, mB, mC);
 	cudaDeviceSynchronize();
 	end = clock();
+
+	if (DEBUG)
+		printMatrix(*mC, 'C');
 
  	// double totalTime = (double)(end - start) / CLOCKS_PER_SEC;
     printf("Total time taken by CPU: %lf\n", end - start); 
