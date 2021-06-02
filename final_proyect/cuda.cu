@@ -50,42 +50,42 @@ int main(int argc, char *argv[]) {
 		return -1;
 	}
 
-	MATRIX* mC;
+	// MATRIX* mC;
 
-	if  ((mC = initializeOutputMatrix(*mA, *mB, true)) == NULL) {
-		printf("Error allocating output matrix C.\n");
-		return -1;
-	}
+	// if  ((mC = initializeOutputMatrix(*mA, *mB, true)) == NULL) {
+	// 	printf("Error allocating output matrix C.\n");
+	// 	return -1;
+	// }
 
-	int *workPerThread;
-	cudaMallocManaged(&workPerThread, sizeof(int));
+	// int *workPerThread;
+	// cudaMallocManaged(&workPerThread, sizeof(int));
 
-	int totalBlocks = mC->rows < MAX_BLOCKS ?  mC->rows : MAX_BLOCKS;
-	int totalRows = mC->cols < MAX_THREADS ?  mC->cols : MAX_THREADS;
+	// int totalBlocks = mC->rows < MAX_BLOCKS ?  mC->rows : MAX_BLOCKS;
+	// int totalRows = mC->cols < MAX_THREADS ?  mC->cols : MAX_THREADS;
 
-	int totalWork = mC->rows * mC->cols;
-	*workPerThread = totalWork / (totalBlocks * totalRows);
+	// int totalWork = mC->rows * mC->cols;
+	// *workPerThread = totalWork / (totalBlocks * totalRows);
 
-	printf("totalBlocks: %d, totalRows: %d\n", totalBlocks, totalRows);
+	// printf("totalBlocks: %d, totalRows: %d\n", totalBlocks, totalRows);
 
-	start = clock();
-	calculateMatrixCuda <<<totalBlocks, totalRows>>> (workPerThread, mA, mB, mC);
-	cudaDeviceSynchronize();
-	end = clock();
+	// start = clock();
+	// calculateMatrixCuda <<<totalBlocks, totalRows>>> (workPerThread, mA, mB, mC);
+	// cudaDeviceSynchronize();
+	// end = clock();
 
-	if (DEBUG)
-		printMatrix(*mC, 'C');
+	// if (DEBUG)
+	// 	printMatrix(*mC, 'C');
 
- 	// double totalTime = (double)(end - start) / CLOCKS_PER_SEC;
-    printf("Total time taken by CPU: %lf\n", end - start); 
+ // 	// double totalTime = (double)(end - start) / CLOCKS_PER_SEC;
+ //    printf("Total time taken by CPU: %lf\n", end - start); 
 
-	printf("Verifying matrix... \n");	if (verifyMatrix(*mA, *mB, *mC)) {
-		printf("Matrix verified!!!\n");
-	}
+	// printf("Verifying matrix... \n");	if (verifyMatrix(*mA, *mB, *mC)) {
+	// 	printf("Matrix verified!!!\n");
+	// }
 
 	freeMatrix(mA, true);
 	freeMatrix(mB, true);
-	freeMatrix(mC, true);
+	// freeMatrix(mC, true);
 
 	return 0;
 }

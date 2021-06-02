@@ -5,7 +5,7 @@
 #include <string.h>
 #include "matrix.h"
 
-#define DEBUG false
+#define DEBUG true
 
 clock_t start, end;
 
@@ -14,32 +14,31 @@ int main(int argc, char *argv[]) {
 	if (!verifyArgs(argc))
 		return false;
 
-
 	MATRIX *mA, *mB;
-	if (!initializeInputMatrixes(argc, argv, &mA, &mB, DEBUG))
+	if (!initializeInputMatrixes(argc, argv, &mA, &mB, DEBUG, false))
 		return -1;
 
-	MATRIX* mC;
+	// MATRIX* mC;
 
-	if  ((mC = initializeOutputMatrix(*mA, *mB)) == NULL) {
-		printf("Error allocating output matrix C.\n");
-		return -1;
-	}
+	// if  ((mC = initializeOutputMatrix(*mA, *mB, false)) == NULL) {
+	// 	printf("Error allocating output matrix C.\n");
+	// 	return -1;
+	// }
    
-   	start = clock();
-	multiplyMatrix(
-		/* startPos */ 	0,
-		/* endPos */ 	mC->rows * mC->cols,
-		/* matrix A */	*mA,
-		/* matrix B */ 	*mB,
-		/* matrix C */ 	mC);
-    end = clock();
+ //   	start = clock();
+	// multiplyMatrix(
+	// 	/* startPos */ 	0,
+	// 	/* endPos */ 	mC->rows * mC->cols,
+	// 	 matrix A 	*mA,
+	// 	/* matrix B */ 	*mB,
+	// 	/* matrix C */ 	mC);
+ //    end = clock();
 
-	if (DEBUG)
-		printMatrix(*mC, 'C');
+	// if (DEBUG)
+	// 	printMatrix(*mC, 'C');
 
- 	double totalTime = (double)(end - start) / CLOCKS_PER_SEC;
-    printf("Total time taken by CPU: %lf\n", end - start); 
+ // 	double totalTime = (double)(end - start) / CLOCKS_PER_SEC;
+ //    printf("Total time taken by CPU: %lf\n", end - start); 
 
 	// if (DEBUG)
 	// 	printf("Reading matrix from: %s (rows: %d, cols: %d)\n",
@@ -72,15 +71,15 @@ int main(int argc, char *argv[]) {
 	// }
 	// if (DEBUG)
 	// 	printMatrix(*mB);
-	printf("Verifying matrix... \n");
+	// printf("Verifying matrix... \n");
 
-	if (verifyMatrix(*mA, *mB, *mC)) {
-		printf("Matrix verified!!!\n");
-	}
+	// if (verifyMatrix(*mA, *mB, *mC)) {
+	// 	printf("Matrix verified!!!\n");
+	// }
 
 	freeMatrix(mA);
 	freeMatrix(mB);
-	freeMatrix(mC);
+	// freeMatrix(mC);
 
 	return 0;
 }

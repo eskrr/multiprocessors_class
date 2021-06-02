@@ -24,9 +24,9 @@ void freeMatrix(MATRIX* matrix, const bool CUDA) {
 		if (matrix->fileName != NULL)
 			free(matrix->fileName);
 		if (matrix->vals != NULL)
-			cudaFree(matrix->vals);
+			// cudaFree(matrix->vals);
 
-		cudaFree(matrix);
+		// cudaFree(matrix);
 	} else {
 		if (matrix == NULL)
 			return;
