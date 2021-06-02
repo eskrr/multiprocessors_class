@@ -142,7 +142,7 @@ double* matrixValue(const MATRIX matrix, const int row, const int col) {
 	return matrix.vals + matrix.cols * row + col;
 }
 
-__global__ void multiplyMatrix(
+void multiplyMatrix(
 	const int startPos,
 	const int endPos,
 	const MATRIX mA,
@@ -239,7 +239,6 @@ bool initializeInputMatrixes(
 	} else if (DEBUG) {
 		printMatrix(**mB, 'B');
 	}
-	printf("Hola\n\n!!\n");
 
 	return true;
 }

@@ -11,8 +11,8 @@ clock_t start, end;
 
 __global__ void calculateMatrixCuda(int *workPerThread, MATRIX* mA, MATRIX* mB, MATRIX* mC) {
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;  // Calculate index for each thread
-	int startPos = idx * *workPerThread;
-	int endPos = startPos + *workPerThread;
+	int pos = idx * *workPerThread;
+	int endPos = pos + *workPerThread;
 
 	multiplyMatrix(
 		/* startPos */ startPos,
@@ -20,6 +20,27 @@ __global__ void calculateMatrixCuda(int *workPerThread, MATRIX* mA, MATRIX* mB, 
 		/* matrix A */ *mA,
 		/* matrix B */ *mB,
 		/* matrix C */ mC);
+
+
+	int n = mA.cols;
+	for (; pos < mC->rows * mC->cols && pos < endPos; pos++) {
+		int row = pos / mC->rows;
+		int col = pos % mC->cols;
+
+		double sum = 0.0;
+		int i = 0;
+		for (; i < n; i++) {
+			// double valA, valB;
+
+			// valA = *matrixValue(mA, row, i);
+			// valB = *matrixValue(mB, i, col);
+
+			sum += (*(mA->vals + mA->cols * row + i) * *(mA->vals + mA->cols * i + col));
+		}
+
+		*(mC->vals + pos) = sum;
+	}
+
 	// printf("(ThreadId: %d, WorkPerThread: %d)\n", idx, *workPerThread);
 	// printf("(start: %d, end: %d)\n", startPos, endPos);
 	// printf("mA: rows: %d, cols: %d\n", mA->rows, mA->cols);
