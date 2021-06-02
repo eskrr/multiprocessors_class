@@ -14,7 +14,7 @@ __global__ void calculateMatrixCuda(int *workPerThread, MATRIX* mA, MATRIX* mB, 
 	int pos = idx * *workPerThread;
 	int endPos = pos + *workPerThread;
 
-	int n = mA.cols;
+	int n = mA->cols;
 	for (; pos < mC->rows * mC->cols && pos < endPos; pos++) {
 		int row = pos / mC->rows;
 		int col = pos % mC->cols;
