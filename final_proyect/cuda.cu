@@ -79,6 +79,13 @@ int main(int argc, char *argv[]) {
  	// double totalTime = (double)(end - start) / CLOCKS_PER_SEC;
     printf("Total time taken by CPU: %lf\n", end - start); 
 
-	printf("Verifying matrix... \n");
+	printf("Verifying matrix... \n");	if (verifyMatrix(*mA, *mB, *mC)) {
+		printf("Matrix verified!!!\n");
+	}
+
+	freeMatrix(mA);
+	freeMatrix(mB);
+	freeMatrix(mC);
+
 	return 0;
 }
