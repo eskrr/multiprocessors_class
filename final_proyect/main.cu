@@ -69,7 +69,7 @@ void runOmp(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times, const MATRIX mCSe
     	totalTime = ((double) (end - start)) / CLOCKS_PER_SEC;
     	*(times + i) = totalTime;
 
-    	if (!compareMatrix(*mC, mCSerial)) {
+    	if (!compareMatrixes(*mC, mCSerial)) {
     		printf("Error matrixes are not equal, work division is incorrect.\n");
     	}
 
@@ -122,7 +122,7 @@ void runCuda(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times, const MATRIX mCS
     	totalTime = ((double) (end - start)) / CLOCKS_PER_SEC;
     	*(times + i) = totalTime;
 
-      	if (!compareMatrix(*mC, mCSerial)) {
+      	if (!compareMatrixes(*mC, mCSerial)) {
     		printf("Error matrixes are not equal, work division is incorrect.\n");
     	}
 
