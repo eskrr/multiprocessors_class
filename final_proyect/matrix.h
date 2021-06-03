@@ -12,6 +12,8 @@
 #define MatrixBRowsArgPos 5
 #define MatrixBColsArgPos 6
 
+#define EPSILON 0.000001
+
 typedef struct MATRIX {
 	char* fileName;
 	double* vals;
@@ -282,8 +284,8 @@ bool compareMatrixes(const MATRIX mA, const MATRIX mB) {
 
 	int i = 0;
 	for (; i < mA.rows * mA.cols; i++) {
-		if (fabs(*(mA.vals + i) - *(mB.vals + i)) > DBL_EPSILON) {
-			printf("%0.10lf > %0.10lf\n", fabs(*(mA.vals + i) - *(mB.vals + i)), DBL_EPSILON);
+		if (fabs(*(mA.vals + i) - *(mB.vals + i)) > EPSILON) {
+			printf("%0.10lf > %0.10lf\n", fabs(*(mA.vals + i) - *(mB.vals + i)), EPSILON);
 			printf("%0.10lf vs %0.10lf\n", *(mA.vals + i), *(mB.vals + i));
 			return false;
 		}
