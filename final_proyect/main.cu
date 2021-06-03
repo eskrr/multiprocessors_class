@@ -20,7 +20,7 @@ void runSerial(const MATRIX mA, const MATRIX mB, MATRIX* mC, double* times) {
 	int i = 0;
 
 	double totalTime;
-	for (; i < 1; i++) {
+	for (; i < NUM_TESTS; i++) {
 		start = clock();
 		multiplyMatrix(
 		/* startPos */ 	0,
@@ -141,6 +141,30 @@ void saveMatrix(const MATRIX mC) {
 	fclose(fp);
 }
 
+void printComparison(double *serialTimes, double *ompTimes, double *cudaTimes) {
+	printf("%20s %20s %20s %20s\n", "RUN", "SERIAL", "OMP", "CUDA");
+
+	int i;
+	double serialSum = 0.0, ompSum = 0.0, cudaSum = 0.0;
+
+	printf("\n");
+	for (i = 0; i < NUM_TESTS; i++) {
+		serialSum += *(serialTimes + i);
+		ompSum += *(ompTimes + i);
+		cudaSum += *(cudaTimes + i);
+		printf("%20d %20.10lf %20.10lf %20.10lf\n", i + 1, *(serialTimes + i), *(ompTimes + i), *(cudaTimes + i));
+	}
+
+	double serialAvg = serialSum / NUM_TESTS;
+	double ompAvg = ompSum / NUM_TESTS;
+	double cudaAvg = cudaSum / NUM_TESTS;
+	printf("%20s %20.10lf %20.10lf %20.10lf", "Promedio", serialAvg, ompAvg, cudaAvg);
+	printf("\n");
+	printf("%20s %20.10lf %20.10lf %20.10lf", "% vs Serial", serialAvg / serialAvg, ompAvg / serialAvg, cudaAvg / serialAvg);
+	printf("\n");
+
+}
+
 int main(int argc, char *argv[]) {
 	if (!verifyArgs(argc))
 		return false;
@@ -188,26 +212,7 @@ int main(int argc, char *argv[]) {
 	freeMatrix(mC, CUDA);
 	freeMatrix(mCParallel, CUDA);
 
-	printf("%20s %20s %20s %20s\n", "RUN", "SERIAL", "OMP", "CUDA");
-
-	int i;
-	double serialSum = 0.0, ompSum = 0.0, cudaSum = 0.0;
-
-	printf("\n");
-	for (i = 0; i < NUM_TESTS; i++) {
-		serialSum += *(serialTimes + i);
-		ompSum += *(ompTimes + i);
-		cudaSum += *(cudaTimes + i);
-		printf("%20d %20.10lf %20.10lf %20.10lf\n", i + 1, *(serialTimes + i), *(ompTimes + i), *(cudaTimes + i));
-	}
-
-	double serialAvg = serialSum / NUM_TESTS;
-	double ompAvg = ompSum / NUM_TESTS;
-	double cudaAvg = cudaSum / NUM_TESTS;
-	printf("%20s %20.10lf %20.10lf %20.10lf", "Promedio", serialAvg, ompAvg, cudaAvg);
-	printf("\n");
-	printf("%20s %20.10lf %20.10lf %20.10lf", "% vs Serial", serialAvg / serialAvg, ompAvg / serialAvg, cudaAvg / serialAvg);
-	printf("\n");
+	printComparison(serialTimes, ompTimes, cudaTimes);
 
 	free(serialTimes);
 	free(ompTimes);

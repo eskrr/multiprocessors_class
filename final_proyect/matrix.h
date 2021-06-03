@@ -62,6 +62,9 @@ MATRIX* initializeOutputMatrix(
 	else
 		output = (MATRIX *)malloc(sizeof(MATRIX));
 
+	if (m == NULL)
+		return NULL;
+
 	if (mA.cols != mB.rows) {
 		printf("Number of cols of matrix A must be equal to number of rows in matrix B.\n");
 		return NULL;
@@ -285,8 +288,6 @@ bool compareMatrixes(const MATRIX mA, const MATRIX mB) {
 	int i = 0;
 	for (; i < mA.rows * mA.cols; i++) {
 		if (fabs(*(mA.vals + i) - *(mB.vals + i)) > EPSILON) {
-			printf("%0.10lf > %0.10lf\n", fabs(*(mA.vals + i) - *(mB.vals + i)), EPSILON);
-			printf("%0.10lf vs %0.10lf\n", *(mA.vals + i), *(mB.vals + i));
 			return false;
 		}
 	}
