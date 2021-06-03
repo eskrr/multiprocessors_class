@@ -71,34 +71,6 @@ void runOmp(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times) {
 	}
 }
 
-void runCuda(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times) {
-	clock_t start, end;
-	int i = 0;
-
-	int *workPerThread;
-	cudaMallocManaged(&workPerThread, sizeof(int));
-
-	int totalBlocks = mC->rows < MAX_BLOCKS ?  mC->rows : MAX_BLOCKS;
-	int totalRows = mC->cols < MAX_THREADS ?  mC->cols : MAX_THREADS;
-
-	int totalWork = mC->rows * mC->cols;
-	*workPerThread = totalWork / (totalBlocks * totalRows);
-
-	double totalTime;
-	for (; i < NUM_TESTS; i++) {
-		start = clock();
-
-		calculateMatrixCuda <<<totalBlocks, totalRows>>> (workPerThread, mA, mB, mC);
-		cudaDeviceSynchronize();
-
-    	end = clock();
-
-    	totalTime = ((double) (end - start)) / CLOCKS_PER_SEC;
-    	*(times + i) = totalTime;
-    	memset(mC->vals, 0, (mC->rows * mC->cols)*sizeof(double));
-	}
-}
-
 __global__ void calculateMatrixCuda(int *workPerThread, MATRIX* mA, MATRIX* mB, MATRIX* mC) {
 	int idx = blockIdx.x * blockDim.x + threadIdx.x;  // Calculate index for each thread
 	int pos = idx * *workPerThread;
@@ -128,6 +100,34 @@ __global__ void calculateMatrixCuda(int *workPerThread, MATRIX* mA, MATRIX* mB, 
 	// printf("mA: rows: %d, cols: %d\n", mA->rows, mA->cols);
 	// printf("mB: rows: %d, cols: %d\n", mB->rows, mB->cols);
 	// printf("mC: rows: %d, cols: %d\n", mC->rows, mC->cols);
+}
+
+void runCuda(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times) {
+	clock_t start, end;
+	int i = 0;
+
+	int *workPerThread;
+	cudaMallocManaged(&workPerThread, sizeof(int));
+
+	int totalBlocks = mC->rows < MAX_BLOCKS ?  mC->rows : MAX_BLOCKS;
+	int totalRows = mC->cols < MAX_THREADS ?  mC->cols : MAX_THREADS;
+
+	int totalWork = mC->rows * mC->cols;
+	*workPerThread = totalWork / (totalBlocks * totalRows);
+
+	double totalTime;
+	for (; i < NUM_TESTS; i++) {
+		start = clock();
+
+		calculateMatrixCuda <<<totalBlocks, totalRows>>> (workPerThread, mA, mB, mC);
+		cudaDeviceSynchronize();
+
+    	end = clock();
+
+    	totalTime = ((double) (end - start)) / CLOCKS_PER_SEC;
+    	*(times + i) = totalTime;
+    	memset(mC->vals, 0, (mC->rows * mC->cols)*sizeof(double));
+	}
 }
 
 int main(int argc, char *argv[]) {
