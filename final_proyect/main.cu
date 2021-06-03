@@ -65,6 +65,22 @@ void runOmp(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times, const MATRIX mCSe
 				/* matrix B */	*mB,
 				/* matrix C */	mC);
 		}
+		// int workLeft = totalWork % (totalBlocks * totalRows);
+		// if (workLeft) {
+		// 	#pragma omp parallel num_threads(workLeft) shared(workPerThread, mA, mB, mC)
+		// 	{
+		// 		int startPos = omp_get_thread_num();
+		// 		int endPos = startPos + workPerThread;
+
+		// 		multiplyMatrix(
+		// 			/* startPos */	startPos,
+		// 			/* endPos */	endPos,
+		// 			/* matrix A */	*mA,
+		// 			/* matrix B */	*mB,
+		// 			/* matrix C */	mC);
+		// 	}
+		// }
+
     	end = clock();
 
     	totalTime = ((double) (end - start)) / ( CLOCKS_PER_SEC / 1000);
@@ -113,10 +129,7 @@ void runCuda(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times, const MATRIX mCS
 	int totalWork = mC->rows * mC->cols;
 	*workPerThread = totalWork / (totalBlocks * totalRows);
 
-	int *workLeft;
-	cudaMallocManaged(&workLeft, sizeof(int));
-	*workLeft = totalWork % (totalBlocks * totalRows);
-	printf("%d, %d\n", *workPerThread, totalWork % (totalBlocks * totalRows));
+	int workLeft = totalWork % (totalBlocks * totalRows);
 
 	double totalTime;
 	for (; i < NUM_TESTS; i++) {
@@ -124,7 +137,7 @@ void runCuda(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times, const MATRIX mCS
 
 		calculateMatrixCuda <<<totalBlocks, totalRows>>> (workPerThread, mA, mB, mC, 0);
 		if (workLeft)
-			calculateMatrixCuda <<<1, *workLeft>>> (workPerThread, mA, mB, mC, totalRows * totalBlocks);
+			calculateMatrixCuda <<<1, workLeft>>> (workPerThread, mA, mB, mC, totalRows * totalBlocks * workPerThread);
 		cudaDeviceSynchronize();
 
     	end = clock();
