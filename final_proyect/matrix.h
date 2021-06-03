@@ -208,7 +208,7 @@ bool initializeInputMatrixes(
 			argv, MatrixAFileNameArgPos,
 			MatrixARowsArgPos, MatrixAColsArgPos,CUDA)) == NULL) {
 		printf("Error allocating matrix A.\n");
-		return false;1
+		return false;
 	}
 
 	if (DEBUG)
