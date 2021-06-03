@@ -70,7 +70,7 @@ void runOmp(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times, const MATRIX mCSe
     	*(times + i) = totalTime;
 
     	if (!compareMatrixes(*mC, mCSerial)) {
-    		printf("Error matrixes are not equal, work division is incorrect.\n");
+    		printf("OMP: Error matrixes are not equal, work division is incorrect.\n");
     	}
 
     	memset(mC->vals, 0, (mC->rows * mC->cols)*sizeof(double));
@@ -123,7 +123,7 @@ void runCuda(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times, const MATRIX mCS
     	*(times + i) = totalTime;
 
       	if (!compareMatrixes(*mC, mCSerial)) {
-    		printf("Error matrixes are not equal, work division is incorrect.\n");
+    		printf("CUDA: Error matrixes are not equal, work division is incorrect.\n");
     	}
 
     	memset(mC->vals, 0, (mC->rows * mC->cols)*sizeof(double));
@@ -206,7 +206,7 @@ int main(int argc, char *argv[]) {
 	double cudaAvg = cudaSum / NUM_TESTS;
 	printf("%20s %20lf %20lf %20lf", "Promedio", serialAvg, ompAvg, cudaAvg);
 	printf("\n");
-	printf("%20s %20s %20lf %20lf", "% vs Serial", "-", ompAvg / serialAvg, cudaAvg / serialAvg);
+	printf("%20s %20lf %20lf %20lf", "% vs Serial", serialAvg / serialAvg, ompAvg / serialAvg, cudaAvg / serialAvg);
 	printf("\n");
 
 	return 0;
