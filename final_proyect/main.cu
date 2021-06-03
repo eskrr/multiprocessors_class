@@ -195,7 +195,7 @@ int main(int argc, char *argv[]) {
 	for (i = 0; i < NUM_TESTS; i++) {
 		serialSum += *(serialTimes + i);
 		ompSum += *(ompTimes + i);
-		cudaTimes += *(cudaTimes + i);
+		cudaSum += *(cudaTimes + i);
 		printf("%20d %20lf %20lf %20lf\n", i, *(serialTimes + i), *(ompTimes + i), *(cudaTimes + i));
 	}
 
