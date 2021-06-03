@@ -261,11 +261,11 @@ MATRIX* transposeMatrix(const MATRIX matrix, const bool CUDA) {
 
 
 	int pos = 0;
-	for (; pos < transposed.rows * transposed.cols; pos++) {
-		int row = pos / transposed.rows;
-		int col = pos % transposed.cols;
+	for (; pos < transposed->rows * transposed->cols; pos++) {
+		int row = pos / transposed->rows;
+		int col = pos % transposed->cols;
 
-		*(output->vals + pos) = matrixValue(matrix, col, row);
+		*(transposed->vals + pos) = matrixValue(matrix, col, row);
 	}
 
 	return transposed;
