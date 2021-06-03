@@ -48,6 +48,7 @@ void runOmp(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times, const MATRIX mCSe
 	}
 
 	int workPerThread = totalWork / totalThreads;
+	printf("%d, %d\n", workPerThread, totalWork % totalThreads);
 
 	double totalTime;
 	for (; i < NUM_TESTS; i++) {
@@ -111,6 +112,7 @@ void runCuda(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times, const MATRIX mCS
 
 	int totalWork = mC->rows * mC->cols;
 	*workPerThread = totalWork / (totalBlocks * totalRows);
+	printf("%d, %d\n", workPerThread, totalWork % (totalBlocks * totalRows));
 
 	double totalTime;
 	for (; i < NUM_TESTS; i++) {
