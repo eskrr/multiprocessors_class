@@ -115,7 +115,7 @@ void runCuda(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times, const MATRIX mCS
 
 	int *workLeft;
 	cudaMallocManaged(&workLeft, sizeof(int));
-	workLeft = *(totalWork % (totalBlocks * totalRows));
+	*workLeft = totalWork % (totalBlocks * totalRows);
 	printf("%d, %d\n", *workPerThread, totalWork % (totalBlocks * totalRows));
 
 	double totalTime;
