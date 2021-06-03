@@ -84,22 +84,11 @@ __global__ void calculateMatrixCuda(int *workPerThread, MATRIX* mA, MATRIX* mB, 
 		double sum = 0.0;
 		int i = 0;
 		for (; i < n; i++) {
-			// double valA, valB;
-
-			// valA = *matrixValue(mA, row, i);
-			// valB = *matrixValue(mB, i, col);
-
-			sum += (*(mA->vals + mA->cols * row + i) * *(mA->vals + mA->cols * i + col));
+			sum += (*(mA->vals + mA->cols * row + i) * *(mB->vals + mB->cols * col + i));
 		}
 
 		*(mC->vals + pos) = sum;
 	}
-
-	// printf("(ThreadId: %d, WorkPerThread: %d)\n", idx, *workPerThread);
-	// printf("(start: %d, end: %d)\n", startPos, endPos);
-	// printf("mA: rows: %d, cols: %d\n", mA->rows, mA->cols);
-	// printf("mB: rows: %d, cols: %d\n", mB->rows, mB->cols);
-	// printf("mC: rows: %d, cols: %d\n", mC->rows, mC->cols);
 }
 
 void runCuda(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times) {
