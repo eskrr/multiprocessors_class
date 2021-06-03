@@ -13,7 +13,7 @@ clock_t start, end;
 
 bool runSerial(const MATRIX mA, const MATRIX mB, double* time) {
 	MATRIX* mC;
-	if  ((mC = initializeOutputMatrix(*mA, *mB, CUDA)) == NULL) {
+	if  ((mC = initializeOutputMatrix(mA, mB, CUDA)) == NULL) {
 		printf("Error allocating output matrix C.\n");
 		return false;
 	}
@@ -25,8 +25,8 @@ bool runSerial(const MATRIX mA, const MATRIX mB, double* time) {
 		multiplyMatrix(
 		/* startPos */ 	0,
 		/* endPos */ 	mC->rows * mC->cols,
-		/* matrix A */ 	*mA,
-		/* matrix B */ 	*mB,
+		/* matrix A */ 	mA,
+		/* matrix B */ 	mB,
 		/* matrix C */ 	mC);
     	end = clock();
 
