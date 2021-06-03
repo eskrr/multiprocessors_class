@@ -282,7 +282,7 @@ bool compareMatrixes(const MATRIX mA, const MATRIX mB) {
 
 	int i = 0;
 	for (; i < mA.rows * mA.cols; i++) {
-		if (fabs(*(mA.vals + i) - *(mB.vals + i)) < 0.0001) {
+		if (fabs(*(mA.vals + i) - *(mB.vals + i)) > DBL_EPSILON) {
 			printf("%lf vs %lf", *(mA.vals + i), *(mB.vals + i));
 			return false;
 		}
