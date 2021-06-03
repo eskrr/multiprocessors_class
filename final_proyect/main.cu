@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
 		return -1;
 
 	MATRIX* mC;
-	if  ((mC = initializeOutputMatrix(mA, mB, CUDA)) == NULL) {
+	if  ((mC = initializeOutputMatrix(*mA, *mB, CUDA)) == NULL) {
 		printf("Error allocating output matrix C.\n");
 		return false;
 	}
