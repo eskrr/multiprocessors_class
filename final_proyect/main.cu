@@ -62,8 +62,9 @@ int main(int argc, char *argv[]) {
 
 	double *serialTimes = (double *)malloc(NUM_TESTS * sizeof(double));
 
-	if (!runSerial(*mA, *mB)) {
-		printf("")
+	if (!runSerial(*mA, *mB, serialTimes)) {
+		printf("Error running serial tests.\n");
+		return -1;
 	}
 
 	// MATRIX* mC;
