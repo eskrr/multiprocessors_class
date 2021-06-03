@@ -280,7 +280,7 @@ bool compareMatrixes(const MATRIX mA, const MATRIX mB) {
 
 	int i = 0;
 	for (; i < mA.rows * mA.cols; i++) {
-		if (*(mA.vals + i) != !(mB.vals + i))
+		if (*(mA.vals + i) != *(mB.vals + i))
 			return false;
 	}
 
