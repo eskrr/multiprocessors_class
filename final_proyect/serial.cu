@@ -44,6 +44,26 @@ int main(int argc, char *argv[]) {
 	if (DEBUG)
 		printMatrix(*mC, 'C');
 
+
+	MATRIX* mCT;
+
+	if  ((mCT = initializeOutputMatrix(*mA, *mB, false)) == NULL) {
+		printf("Error allocating output matrix C.\n");
+		return -1;
+	}
+   
+   	start = clock();
+	multiplyMatrixTransposed(
+		/* startPos */ 	0,
+		/* endPos */ 	mCT->rows * mCT->cols,
+		/* matrix A */ 	*mA,
+		/* matrix B */ 	*mBT,
+		/* matrix C */ 	mC);
+    end = clock();
+
+	if (DEBUG)
+		printMatrix(*mC, 'T');
+
  	double totalTime = (double)(end - start) / CLOCKS_PER_SEC;
     printf("Total time taken by CPU: %lf\n", end - start); 
 
