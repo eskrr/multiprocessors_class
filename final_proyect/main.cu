@@ -78,8 +78,8 @@ __global__ void calculateMatrixCuda(int *workPerThread, MATRIX* mA, MATRIX* mB, 
 
 	int n = mA->cols;
 	for (; pos < mC->rows * mC->cols && pos < endPos; pos++) {
-		int row = pos / mC->rows;
-		int col = pos % mC->rows;
+		int row = pos / mC->cols;
+		int col = pos % mC->cols;
 
 		double sum = 0.0;
 		int i = 0;
