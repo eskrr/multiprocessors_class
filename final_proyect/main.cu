@@ -155,7 +155,6 @@ void runCuda(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times, const MATRIX mCS
 	}
 
 	cudaFree(workPerThread);
-	cudaFree(workLeft);
 }
 
 void saveMatrix(const MATRIX mC) {
