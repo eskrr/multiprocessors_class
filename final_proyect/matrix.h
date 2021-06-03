@@ -284,7 +284,7 @@ bool compareMatrixes(const MATRIX mA, const MATRIX mB) {
 	for (; i < mA.rows * mA.cols; i++) {
 		if (fabs(*(mA.vals + i) - *(mB.vals + i)) > DBL_EPSILON) {
 			printf("%lf > %lf\n", fabs(*(mA.vals + i) - *(mB.vals + i)), DBL_EPSILON);
-			printf("%lf vs %lf", *(mA.vals + i), *(mB.vals + i));
+			printf("%lf vs %lf\n", *(mA.vals + i), *(mB.vals + i));
 			return false;
 		}
 	}
