@@ -20,7 +20,7 @@ void runSerial(const MATRIX mA, const MATRIX mB, MATRIX* mC, double* times) {
 	int i = 0;
 
 	double totalTime;
-	for (; i < NUM_TESTS; i++) {
+	for (; i < 1; i++) {
 		start = clock();
 		multiplyMatrix(
 		/* startPos */ 	0,
