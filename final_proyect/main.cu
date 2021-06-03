@@ -120,7 +120,7 @@ void runCuda(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times) {
 	}
 }
 
-void runOnceAndSave(const MATRIX mA, const MATRIX mB, MATRIX* mC, double* times) {
+void runOnceAndSave(const MATRIX mA, const MATRIX mB, MATRIX* mC) {
 	multiplyMatrix(
 		/* startPos */ 	0,
 		/* endPos */ 	mC->rows * mC->cols,
