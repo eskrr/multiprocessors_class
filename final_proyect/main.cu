@@ -69,7 +69,9 @@ void runOmp(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times, const MATRIX mCSe
     	totalTime = ((double) (end - start)) / ( CLOCKS_PER_SEC / 1000);
     	*(times + i) = totalTime;
 
-    	if (!compareMatrixes(*mC, mCSerial)) {
+    	if (compareMatrixes(*mC, mCSerial)) {
+    		printf("OMP: Matrixes are equal.\n");
+    	} else {
     		printf("OMP: Error matrixes are not equal.\n");
     	}
 
@@ -122,7 +124,9 @@ void runCuda(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times, const MATRIX mCS
     	totalTime = ((double) (end - start)) / CLOCKS_PER_SEC;
     	*(times + i) = totalTime;
 
-      	if (!compareMatrixes(*mC, mCSerial)) {
+    	if (compareMatrixes(*mC, mCSerial)) {
+    		printf("CUDA: Matrixes are equal.\n");
+    	} else {
     		printf("CUDA: Error matrixes are not equal.\n");
     	}
 
@@ -163,6 +167,17 @@ void printComparison(double *serialTimes, double *ompTimes, double *cudaTimes) {
 	printf("%20s %20.10lf %20.10lf %20.10lf", "% vs Serial", serialAvg / serialAvg, ompAvg / serialAvg, cudaAvg / serialAvg);
 	printf("\n");
 
+	if (serialAvg > ompAvg && serialAvg > cudaAvg) {
+		printf("Serial was fastest.\n");
+	}
+
+	if (ompAvg > serialAvg && ompAvg > cudaAvg) {
+		printf("Serial was fastest.\n");
+	}
+
+	if (cudaAvg > serialAvg && cudaAvg > ompAvg) {
+		printf("Serial was fastest.\n");
+	}
 }
 
 int main(int argc, char *argv[]) {
