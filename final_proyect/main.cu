@@ -30,7 +30,7 @@ void runSerial(const MATRIX mA, const MATRIX mB, MATRIX* mC, double* times) {
 		/* matrix C */ 	mC);
     	end = clock();
 
-    	totalTime = ((double) (end - start)) / CLOCKS_PER_SEC;
+    	totalTime = ((double) (end - start)) / (CLOCKS_PER_SEC / 1000);
     	*(times + i) = totalTime;
     	// memset(mC->vals, 0, (mC->rows * mC->cols)*sizeof(double));
 	}
@@ -66,7 +66,7 @@ void runOmp(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times, const MATRIX mCSe
 		}
     	end = clock();
 
-    	totalTime = ((double) (end - start)) / CLOCKS_PER_SEC;
+    	totalTime = ((double) (end - start)) / ( CLOCKS_PER_SEC / 1000);
     	*(times + i) = totalTime;
 
     	if (!compareMatrixes(*mC, mCSerial)) {
