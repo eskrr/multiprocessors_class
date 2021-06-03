@@ -124,7 +124,7 @@ void runCuda(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times, const MATRIX mCS
 
 		calculateMatrixCuda <<<totalBlocks, totalRows>>> (workPerThread, mA, mB, mC, 0);
 		if (workLeft)
-			calculateMatrixCuda <<<1, workLeft>>> (workPerThread, mA, mB, mC, totalRows * totalBlocks);
+			calculateMatrixCuda <<<1, *workLeft>>> (workPerThread, mA, mB, mC, totalRows * totalBlocks);
 		cudaDeviceSynchronize();
 
     	end = clock();
