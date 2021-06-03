@@ -115,6 +115,7 @@ void runCuda(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times) {
 
     	totalTime = ((double) (end - start)) / CLOCKS_PER_SEC;
     	*(times + i) = totalTime;
+    	printMatrix(*mC, 'C');
     	memset(mC->vals, 0, (mC->rows * mC->cols)*sizeof(double));
 	}
 }
