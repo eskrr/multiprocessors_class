@@ -170,6 +170,34 @@ void multiplyMatrix(
 	}
 }
 
+void multiplyMatrixTransposed(
+	const int startPos,
+	const int endPos,
+	const MATRIX mA,
+	const MATRIX mBT,
+	MATRIX* mC) {
+	int n = mA.cols;
+	int pos = startPos;
+	for (; pos < mC->rows * mC->cols && pos < endPos; pos++) {
+		asm("nop");
+		int row = pos / mC->rows;
+		int col = pos % mC->cols;
+
+		double sum = 0.0;
+		int i = 0;
+		for (; i < n; i++) {
+			asm("nop");
+			double valA, valB;
+			valA = *matrixValue(mA, row, i);
+			valB = *matrixValue(mBT, col, i);
+
+			sum += valA * valB;
+		}
+
+		*(mC->vals + pos) = sum;
+	}
+}
+
 bool verifyMatrix(
 	const MATRIX mA,
 	const MATRIX mB,
