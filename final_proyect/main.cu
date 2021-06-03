@@ -48,8 +48,6 @@ void runOmp(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times, const MATRIX mCSe
 	}
 
 	int workPerThread = totalWork / totalThreads;
-	printf("%d, %d\n", workPerThread, totalWork % totalThreads);
-
 	double totalTime;
 	for (; i < NUM_TESTS; i++) {
 		start = clock();
@@ -65,7 +63,7 @@ void runOmp(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times, const MATRIX mCSe
 				/* matrix B */	*mB,
 				/* matrix C */	mC);
 		}
-		int workLeft = totalWork % (totalBlocks * totalRows);
+		int workLeft = totalWork % totalThreads;
 		if (workLeft) {
 			#pragma omp parallel num_threads(workLeft) shared(totalThreads, workPerThread, mA, mB, mC)
 			{
