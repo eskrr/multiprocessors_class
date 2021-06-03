@@ -11,6 +11,7 @@
 #define NUM_TESTS 5
 #define MAX_THREADS 2014
 #define MAX_BLOCKS 1024
+#define OUTPUT_FILE "matrixC.txt"
 
 clock_t start, end;
 
@@ -115,9 +116,26 @@ void runCuda(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times) {
 
     	totalTime = ((double) (end - start)) / CLOCKS_PER_SEC;
     	*(times + i) = totalTime;
-    	printMatrix(*mC, 'C');
     	memset(mC->vals, 0, (mC->rows * mC->cols)*sizeof(double));
 	}
+}
+
+void runOnceAndSave(const MATRIX mA, const MATRIX mB, MATRIX* mC, double* times) {
+	multiplyMatrix(
+		/* startPos */ 	0,
+		/* endPos */ 	mC->rows * mC->cols,
+		/* matrix A */ 	mA,
+		/* matrix B */ 	mB,
+		/* matrix C */ 	mC);
+
+	FILE* fp = fopen(OUTPUT_FILE, "w");
+
+	int i = 0;
+	for (; i < mC->rows * mC->cols; i++) {
+		fprintf(fp, "%lf\n", *(mC->vals + i));
+	}
+
+	fclose(fp);
 }
 
 int main(int argc, char *argv[]) {
