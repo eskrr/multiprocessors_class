@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
 
 	freeMatrix(mA, false);
 	freeMatrix(mB, false);
-	freeMatrix(mC), false;
+	freeMatrix(mC, false);
 
 	return 0;
 }
