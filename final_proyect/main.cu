@@ -134,8 +134,8 @@ void saveMatrix(const MATRIX mC) {
 	FILE* fp = fopen(OUTPUT_FILE, "w");
 
 	int i = 0;
-	for (; i < mC->rows * mC->cols; i++) {
-		fprintf(fp, "%lf\n", *(mC->vals + i));
+	for (; i < mC.rows * mC.cols; i++) {
+		fprintf(fp, "%lf\n", *(mC.vals + i));
 	}
 
 	fclose(fp);
