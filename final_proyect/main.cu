@@ -65,21 +65,21 @@ void runOmp(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times, const MATRIX mCSe
 				/* matrix B */	*mB,
 				/* matrix C */	mC);
 		}
-		// int workLeft = totalWork % (totalBlocks * totalRows);
-		// if (workLeft) {
-		// 	#pragma omp parallel num_threads(workLeft) shared(workPerThread, mA, mB, mC)
-		// 	{
-		// 		int startPos = omp_get_thread_num();
-		// 		int endPos = startPos + workPerThread;
+		int workLeft = totalWork % (totalBlocks * totalRows);
+		if (workLeft) {
+			#pragma omp parallel num_threads(workLeft) shared(totalThreads, workPerThread, mA, mB, mC)
+			{
+				int startPos = totalThreads * workPerThread + omp_get_thread_num();
+				int endPos = startPos + 1;
 
-		// 		multiplyMatrix(
-		// 			/* startPos */	startPos,
-		// 			/* endPos */	endPos,
-		// 			/* matrix A */	*mA,
-		// 			/* matrix B */	*mB,
-		// 			/* matrix C */	mC);
-		// 	}
-		// }
+				multiplyMatrix(
+					/* startPos */	startPos,
+					/* endPos */	endPos,
+					/* matrix A */	*mA,
+					/* matrix B */	*mB,
+					/* matrix C */	mC);
+			}
+		}
 
     	end = clock();
 
@@ -137,7 +137,7 @@ void runCuda(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times, const MATRIX mCS
 
 		calculateMatrixCuda <<<totalBlocks, totalRows>>> (workPerThread, mA, mB, mC, 0);
 		if (workLeft)
-			calculateMatrixCuda <<<1, workLeft>>> (workPerThread, mA, mB, mC, totalRows * totalBlocks * *workPerThread);
+			calculateMatrixCuda <<<1, workLeft>>> (workPerThread, mA, mB, mC, totalRows * totalBlocks);
 		cudaDeviceSynchronize();
 
     	end = clock();
