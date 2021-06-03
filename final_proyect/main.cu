@@ -12,7 +12,6 @@
 clock_t start, end;
 
 bool runSerial(const MATRIX mA, const MATRIX mB, MATRIX* mC, double* times) {
-
 	clock_t start, end;
 	int i = 0;
 	for (; i < 0; i++) {

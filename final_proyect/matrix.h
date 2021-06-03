@@ -142,35 +142,35 @@ double* matrixValue(const MATRIX matrix, const int row, const int col) {
 	return matrix.vals + matrix.cols * row + col;
 }
 
+// void multiplyMatrix(
+// 	const int startPos,
+// 	const int endPos,
+// 	const MATRIX mA,
+// 	const MATRIX mB,
+// 	MATRIX* mC) {
+// 	int n = mA.cols;
+// 	int pos = startPos;
+// 	for (; pos < mC->rows * mC->cols && pos < endPos; pos++) {
+// 		asm("nop");
+// 		int row = pos / mC->cols;
+// 		int col = pos % mC->cols;
+
+// 		double sum = 0.0;
+// 		int i = 0;
+// 		for (; i < n; i++) {
+// 			asm("nop");
+// 			double valA, valB;
+// 			valA = *matrixValue(mA, row, i);
+// 			valB = *matrixValue(mB, i, col);
+
+// 			sum += valA * valB;
+// 		}
+
+// 		*(mC->vals + pos) = sum;
+// 	}
+// }
+
 void multiplyMatrix(
-	const int startPos,
-	const int endPos,
-	const MATRIX mA,
-	const MATRIX mB,
-	MATRIX* mC) {
-	int n = mA.cols;
-	int pos = startPos;
-	for (; pos < mC->rows * mC->cols && pos < endPos; pos++) {
-		asm("nop");
-		int row = pos / mC->cols;
-		int col = pos % mC->cols;
-
-		double sum = 0.0;
-		int i = 0;
-		for (; i < n; i++) {
-			asm("nop");
-			double valA, valB;
-			valA = *matrixValue(mA, row, i);
-			valB = *matrixValue(mB, i, col);
-
-			sum += valA * valB;
-		}
-
-		*(mC->vals + pos) = sum;
-	}
-}
-
-void multiplyMatrixTransposed(
 	const int startPos,
 	const int endPos,
 	const MATRIX mA,
