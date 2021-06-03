@@ -192,13 +192,20 @@ int main(int argc, char *argv[]) {
 
 	int i;
 	double serialSum = 0.0, ompSum = 0.0, cudaSum = 0.0;
+
+	printf("\n");
 	for (i = 0; i < NUM_TESTS; i++) {
 		serialSum += *(serialTimes + i);
 		ompSum += *(ompTimes + i);
 		cudaSum += *(cudaTimes + i);
-		printf("%20d %20lf %20lf %20lf\n", i, *(serialTimes + i), *(ompTimes + i), *(cudaTimes + i));
+		printf("%20d %20lf %20lf %20lf\n", i + 1, *(serialTimes + i), *(ompTimes + i), *(cudaTimes + i));
 	}
 
+	double serialAvg = serialSum / NUM_TESTS;
+	double ompAvg = ompSum / NUM_TESTS;
+	double cudaAvg = cudaSum / NUM_TESTS;
+	printf("%20s %20lf %20lf %20lf", "Promedio", serialAvg, ompAvg, cudaAvg);
+	printf("%20s %20lf %20lf %20lf", "% vs Serial", "-", ompAvg / serialAvg, cudaAvg / serialAvg);
 	printf("\n");
 
 	return 0;
