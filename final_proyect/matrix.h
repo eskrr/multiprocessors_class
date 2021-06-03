@@ -152,7 +152,7 @@ void multiplyMatrix(
 	int pos = startPos;
 	for (; pos < mC->rows * mC->cols && pos < endPos; pos++) {
 		asm("nop");
-		int row = pos / mC->rows;
+		int row = pos / mC->cols;
 		int col = pos % mC->cols;
 
 		double sum = 0.0;
@@ -205,12 +205,14 @@ bool verifyMatrix(
 	int n = mA.cols;
 	int pos = 0;
 	for (; pos < mC.rows * mC.cols; pos++) {
+		asm("nop");
 		int row = pos / mC.cols;
 		int col = pos % mC.cols;
 
 		double sum = 0.0;
 		int i = 0;
 		for (; i < n; i++) {
+			asm("nop");
 			double valA, valB;
 			valA = *matrixValue(mA, row, i);
 			valB = *matrixValue(mB, i, col);
