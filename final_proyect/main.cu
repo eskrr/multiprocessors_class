@@ -9,8 +9,8 @@
 #define DEBUG false
 #define CUDA true
 #define NUM_TESTS 5
-#define MAX_THREADS 15
-#define MAX_BLOCKS 15
+#define MAX_THREADS 1024
+#define MAX_BLOCKS 1024
 #define OUTPUT_FILE "matrixC.txt"
 
 clock_t start, end;
