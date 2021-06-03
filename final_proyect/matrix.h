@@ -252,7 +252,7 @@ MATRIX* transposeMatrix(const MATRIX matrix, const bool CUDA) {
 
 	transposed->rows = matrix.cols;
 	transposed->cols = matrix.cols;
-	transposed->fileName = strdup(matirx.fileName);
+	transposed->fileName = strdup(matrix.fileName);
 
 	if (CUDA)
 		cudaMallocManaged(&transposed->vals, transposed->rows * transposed->cols * sizeof(double));
