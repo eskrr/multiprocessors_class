@@ -33,7 +33,7 @@ void runSerial(const MATRIX mA, const MATRIX mB, MATRIX* mC, double* times) {
 	}
 }
 
-void runOmp(const MATRIX mA, const MATRIX mB, MATRIX* mC, double* times) {
+void runOmp(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times) {
 	clock_t start, end;
 	int i = 0;
 
@@ -49,7 +49,7 @@ void runOmp(const MATRIX mA, const MATRIX mB, MATRIX* mC, double* times) {
 	double totalTime;
 	for (; i < NUM_TESTS; i++) {
 		start = clock();
-		#pragma omp parallel num_threads(totalThreads) shared(workPerThread, &mA, &mB, mC)
+		#pragma omp parallel num_threads(totalThreads) shared(workPerThread, mA, mB, mC)
 		{
 			int startPos = omp_get_thread_num() * workPerThread;
 			int endPos = startPos + workPerThread;
@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
 	runSerial(*mA, *mB, mC, serialTimes);
 
 	double *ompTimes = (double *)malloc(NUM_TESTS * sizeof(double));
-	runOmp(*mA, *mB, mC, ompTimes);
+	runOmp(mA, mB, mC, ompTimes);
 
 	// MATRIX* mC;
 
