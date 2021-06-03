@@ -32,11 +32,11 @@ void runSerial(const MATRIX mA, const MATRIX mB, MATRIX* mC, double* times) {
 
     	totalTime = ((double) (end - start)) / CLOCKS_PER_SEC;
     	*(times + i) = totalTime;
-    	memset(mC->vals, 0, (mC->rows * mC->cols)*sizeof(double));
+    	// memset(mC->vals, 0, (mC->rows * mC->cols)*sizeof(double));
 	}
 }
 
-void runOmp(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times) {
+void runOmp(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times, const MATRIX mCSerial) {
 	clock_t start, end;
 	int i = 0;
 
@@ -68,6 +68,11 @@ void runOmp(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times) {
 
     	totalTime = ((double) (end - start)) / CLOCKS_PER_SEC;
     	*(times + i) = totalTime;
+
+    	if (!compareMatrix(*mC, *mCSerial)) {
+    		printf("Error matrixes are not equal, work division is incorrect.\n");
+    	}
+
     	memset(mC->vals, 0, (mC->rows * mC->cols)*sizeof(double));
 	}
 }
@@ -92,7 +97,7 @@ __global__ void calculateMatrixCuda(int *workPerThread, MATRIX* mA, MATRIX* mB, 
 	}
 }
 
-void runCuda(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times) {
+void runCuda(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times, const MATRIX mCSerial) {
 	clock_t start, end;
 	int i = 0;
 
@@ -116,6 +121,11 @@ void runCuda(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times) {
 
     	totalTime = ((double) (end - start)) / CLOCKS_PER_SEC;
     	*(times + i) = totalTime;
+
+      	if (!compareMatrix(*mC, *mCSerial)) {
+    		printf("Error matrixes are not equal, work division is incorrect.\n");
+    	}
+
     	memset(mC->vals, 0, (mC->rows * mC->cols)*sizeof(double));
 	}
 }
@@ -152,6 +162,12 @@ int main(int argc, char *argv[]) {
 		return false;
 	}
 
+	MATRIX* mCParallel;
+	if  ((mCParallel = initializeOutputMatrix(*mA, *mB, CUDA)) == NULL) {
+		printf("Error allocating output matrix C.\n");
+		return false;
+	}
+
 	MATRIX *mBT = transposeMatrix(*mB, CUDA);
 
 	freeMatrix(mB, CUDA);
@@ -165,12 +181,13 @@ int main(int argc, char *argv[]) {
 
 	double *serialTimes = (double *)malloc(NUM_TESTS * sizeof(double));
 	runSerial(*mA, *mB, mC, serialTimes);
+	printMatrix(*mC, 'C');
 
 	double *ompTimes = (double *)malloc(NUM_TESTS * sizeof(double));
-	runOmp(mA, mB, mC, ompTimes);
+	runOmp(mA, mB, mCParallel, ompTimes, *mC);
 
 	double *cudaTimes = (double *)malloc(NUM_TESTS * sizeof(double));
-	runCuda(mA, mB, mC, cudaTimes);
+	runCuda(mA, mB, mCParallel, cudaTimes, *mC);
 
 	runOnceAndSave(*mA, *mB, mC);
 

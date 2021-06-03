@@ -273,3 +273,16 @@ MATRIX* transposeMatrix(const MATRIX matrix, const bool CUDA) {
 
 	return transposed;
 }
+
+bool compareMatrixes(const MATRIX mA, const MATRIX mB) {
+	if (mA.cols != mB.cols || mA.rows != mB.rows)
+		return false;
+
+	int i = 0;
+	for (; i < mA.rows * mA.cols; i++) {
+		if (*(mA.vals + i) != !(mB.vals + i))
+			return false;
+	}
+
+	return true;
+}
