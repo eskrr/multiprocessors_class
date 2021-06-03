@@ -14,6 +14,8 @@ clock_t start, end;
 bool runSerial(const MATRIX mA, const MATRIX mB, MATRIX* mC, double* times) {
 	clock_t start, end;
 	int i = 0;
+
+	double totalTime;
 	for (; i < 0; i++) {
 		start = clock();
 		multiplyMatrix(
@@ -24,8 +26,9 @@ bool runSerial(const MATRIX mA, const MATRIX mB, MATRIX* mC, double* times) {
 		/* matrix C */ 	mC);
     	end = clock();
 
-    	*(times + i) = ((double) (end - start)) / CLOCKS_PER_SEC;
-
+    	totalTime = ((double) (end - start)) / CLOCKS_PER_SEC;
+    	printf("Time: %lf\n", totalTime);
+    	*(times + i) = totalTime;
     	memset(mC->vals, 0, (mC->rows * mC->cols)*sizeof(double));
 	}
 
@@ -114,6 +117,7 @@ int main(int argc, char *argv[]) {
 	int i;
 	for (i = 0; i < NUM_TESTS; i++)
 		printf("%5lf ", *(serialTimes + i));
+	printf("\n");
 
 	return 0;
 }
