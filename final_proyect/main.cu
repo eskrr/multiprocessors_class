@@ -130,14 +130,7 @@ void runCuda(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times, const MATRIX mCS
 	}
 }
 
-void runOnceAndSave(const MATRIX mA, const MATRIX mB, MATRIX* mC) {
-	multiplyMatrix(
-		/* startPos */ 	0,
-		/* endPos */ 	mC->rows * mC->cols,
-		/* matrix A */ 	mA,
-		/* matrix B */ 	mB,
-		/* matrix C */ 	mC);
-
+void saveMatrix(const MATRIX mC) {
 	FILE* fp = fopen(OUTPUT_FILE, "w");
 
 	int i = 0;
@@ -189,11 +182,12 @@ int main(int argc, char *argv[]) {
 	double *cudaTimes = (double *)malloc(NUM_TESTS * sizeof(double));
 	runCuda(mA, mB, mCParallel, cudaTimes, *mC);
 
-	runOnceAndSave(*mA, *mB, mC);
+	saveMatrix(*mC);
 
 	freeMatrix(mA, CUDA);
 	freeMatrix(mB, CUDA);
 	freeMatrix(mC, CUDA);
+	freeMatrix(mCParallel, CUDA);
 
 	printf("%20s %20s %20s\n", "SERIAL", "OMP", "CUDA");
 
