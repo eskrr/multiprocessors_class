@@ -209,5 +209,9 @@ int main(int argc, char *argv[]) {
 	printf("%20s %20.10lf %20.10lf %20.10lf", "% vs Serial", serialAvg / serialAvg, ompAvg / serialAvg, cudaAvg / serialAvg);
 	printf("\n");
 
+	free(serialTimes);
+	free(ompTimes);
+	free(cudaTimes);
+
 	return 0;
 }
