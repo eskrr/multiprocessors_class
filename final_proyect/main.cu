@@ -98,7 +98,7 @@ int main(int argc, char *argv[]) {
 	runSerial(*mA, *mB, mC, serialTimes);
 
 	double *ompTimes = (double *)malloc(NUM_TESTS * sizeof(double));
-	runOmp(*mA, *mB, mC);
+	runOmp(*mA, *mB, mC, ompTimes);
 
 	// MATRIX* mC;
 
