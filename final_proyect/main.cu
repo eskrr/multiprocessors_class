@@ -5,13 +5,13 @@
 #include <string.h>
 #include "matrix.h"
 
-#define DEBUG true
+#define DEBUG false
 #define CUDA true
 #define NUM_TESTS 5
 
 clock_t start, end;
 
-bool runSerial(const MATRIX mA, const MATRIX mB, MATRIX* mC, double* time) {
+bool runSerial(const MATRIX mA, const MATRIX mB, MATRIX* mC, double* times) {
 
 	clock_t start, end;
 	int i = 0;
@@ -25,7 +25,7 @@ bool runSerial(const MATRIX mA, const MATRIX mB, MATRIX* mC, double* time) {
 		/* matrix C */ 	mC);
     	end = clock();
 
-    	*(time + i) = ((double) (end - start)) / CLOCKS_PER_SEC;
+    	*(times + i) = ((double) (end - start)) / CLOCKS_PER_SEC;
 
     	memset(mC->vals, 0, (mC->rows * mC->cols)*sizeof(double));
 	}
