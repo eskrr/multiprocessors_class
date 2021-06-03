@@ -25,68 +25,31 @@ int main(int argc, char *argv[]) {
 		printMatrix(*mBT, 'T');
 	}
 
-	// MATRIX* mC;
+	MATRIX* mC;
 
-	// if  ((mC = initializeOutputMatrix(*mA, *mB, false)) == NULL) {
-	// 	printf("Error allocating output matrix C.\n");
-	// 	return -1;
-	// }
+	if  ((mC = initializeOutputMatrix(*mA, *mB, false)) == NULL) {
+		printf("Error allocating output matrix C.\n");
+		return -1;
+	}
    
- //   	start = clock();
-	// multiplyMatrix(
-	// 	/* startPos */ 	0,
-	// 	/* endPos */ 	mC->rows * mC->cols,
-	// 	 matrix A 	*mA,
-	// 	/* matrix B */ 	*mB,
-	// 	/* matrix C */ 	mC);
- //    end = clock();
+   	start = clock();
+	multiplyMatrix(
+		/* startPos */ 	0,
+		/* endPos */ 	mC->rows * mC->cols,
+		 matrix A 	*mA,
+		/* matrix B */ 	*mB,
+		/* matrix C */ 	mC);
+    end = clock();
 
-	// if (DEBUG)
-	// 	printMatrix(*mC, 'C');
+	if (DEBUG)
+		printMatrix(*mC, 'C');
 
- // 	double totalTime = (double)(end - start) / CLOCKS_PER_SEC;
- //    printf("Total time taken by CPU: %lf\n", end - start); 
-
-	// if (DEBUG)
-	// 	printf("Reading matrix from: %s (rows: %d, cols: %d)\n",
-	// 		mB->fileName, mB->rows, mB->cols);
-
-	// if (!readMatrix(mB)) {
-	// 	printf("Error reading matrix B from: %s\n", mB->fileName);
-	// }
-
-	// if (argc < 3) {
-	// 	printf("Please provide filenames for matrix A and B and their respective sizes in the following format: \n");
-	// 	printf("./binaryName matrixAFileName numRows numCols matrixBFileName numRows numCols");
-	// 	return -1;
-	// }
-	// matrixAFileName = argv[1];
-	// matrixBFileName = argv[2];
-
-	// MATRIX* mA = readMatrix('A', matrixAFileName);
-	// if (!mA) {
-	// 	printf("Error reading matrix A\n");
-	// 	return -1;
-	// }
-	// if (DEBUG)
-	// 	printMatrix(*mA);
-
-	// MATRIX* mB = readMatrix('A', matrixBFileName);
-	// if (!mB) {
-	// 	printf("Error reading matrix B\n");
-	// 	return -1;
-	// }
-	// if (DEBUG)
-	// 	printMatrix(*mB);
-	// printf("Verifying matrix... \n");
-
-	// if (verifyMatrix(*mA, *mB, *mC)) {
-	// 	printf("Matrix verified!!!\n");
-	// }
+ 	double totalTime = (double)(end - start) / CLOCKS_PER_SEC;
+    printf("Total time taken by CPU: %lf\n", end - start); 
 
 	freeMatrix(mA, false);
 	freeMatrix(mB, false);
-	// freeMatrix(mC);
+	freeMatrix(mC), false;
 
 	return 0;
 }
