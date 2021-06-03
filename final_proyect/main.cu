@@ -70,7 +70,7 @@ void runOmp(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times, const MATRIX mCSe
     	*(times + i) = totalTime;
 
     	if (!compareMatrixes(*mC, mCSerial)) {
-    		printf("OMP: Error matrixes are not equal, work division is incorrect.\n");
+    		printf("OMP: Error matrixes are not equal.\n");
     	}
 
     	memset(mC->vals, 0, (mC->rows * mC->cols)*sizeof(double));
@@ -123,7 +123,7 @@ void runCuda(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times, const MATRIX mCS
     	*(times + i) = totalTime;
 
       	if (!compareMatrixes(*mC, mCSerial)) {
-    		printf("CUDA: Error matrixes are not equal, work division is incorrect.\n");
+    		printf("CUDA: Error matrixes are not equal.\n");
     	}
 
     	memset(mC->vals, 0, (mC->rows * mC->cols)*sizeof(double));
