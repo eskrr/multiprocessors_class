@@ -113,7 +113,7 @@ int main(int argc, char *argv[]) {
 
 	int i;
 	for (i = 0; i < NUM_TESTS; i++)
-		printf("%5lf \n", *(serialTimes + i));
+		printf("%5lf ", *(serialTimes + i));
 
 	return 0;
 }
