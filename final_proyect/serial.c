@@ -78,7 +78,7 @@ int main(int argc, char *argv[]) {
 	// }
 
 	freeMatrix(mA, false);
-	freeMatrix(mB), false;
+	freeMatrix(mB, false);
 	// freeMatrix(mC);
 
 	return 0;
