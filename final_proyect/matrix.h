@@ -180,8 +180,8 @@ void multiplyMatrixTransposed(
 	int pos = startPos;
 	for (; pos < mC->rows * mC->cols && pos < endPos; pos++) {
 		asm("nop");
-		int row = pos / mC->rows;
-		int col = pos % mC->rows;
+		int row = pos / mC->cols;
+		int col = pos % mC->cols;
 
 		double sum = 0.0;
 		int i = 0;
@@ -205,8 +205,8 @@ bool verifyMatrix(
 	int n = mA.cols;
 	int pos = 0;
 	for (; pos < mC.rows * mC.cols; pos++) {
-		int row = pos / mC.rows;
-		int col = pos % mC.rows;
+		int row = pos / mC.cols;
+		int col = pos % mC.cols;
 
 		double sum = 0.0;
 		int i = 0;
