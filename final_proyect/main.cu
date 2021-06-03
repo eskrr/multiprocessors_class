@@ -11,7 +11,7 @@
 
 clock_t start, end;
 
-bool runSerial(const MATRIX mA, const MATRIX mB, MATRIX* mC, double* times) {
+void runSerial(const MATRIX mA, const MATRIX mB, MATRIX* mC, double* times) {
 	clock_t start, end;
 	int i = 0;
 
@@ -27,12 +27,45 @@ bool runSerial(const MATRIX mA, const MATRIX mB, MATRIX* mC, double* times) {
     	end = clock();
 
     	totalTime = ((double) (end - start)) / CLOCKS_PER_SEC;
-    	printf("Time: %lf\n", totalTime);
     	*(times + i) = totalTime;
     	memset(mC->vals, 0, (mC->rows * mC->cols)*sizeof(double));
 	}
+}
 
-	return true;
+void runOmp(const MATRIX mA, const MATRIX mB, MATRIX* mC, double* times) {
+	clock_t start, end;
+	int i = 0;
+
+	int totalWork = mC->rows * mC->cols;
+
+	int totalThreads = omp_get_max_threads();
+	if (totalThreads > totalWork) {
+		totalThreads = totalWork;
+	}
+
+	int workPerThread = totalWork / totalThreads;
+
+	double totalTime;
+	for (; i < NUM_TESTS; i++) {
+		start = clock();
+		#pragma omp parallel num_threads(totalThreads) shared(workPerThread, mA, mB, mC)
+		{
+			int startPos = omp_get_thread_num() * workPerThread;
+			int endPos = startPos + workPerThread;
+
+			multiplyMatrix(
+				/* startPos */ startPos,
+				/* endPos */ endPos,
+				/* matrix A */ *mA,
+				/* matrix B */ *mB,
+				/* matrix C */ mC);
+		}
+    	end = clock();
+
+    	totalTime = ((double) (end - start)) / CLOCKS_PER_SEC;
+    	*(times + i) = totalTime;
+    	memset(mC->vals, 0, (mC->rows * mC->cols)*sizeof(double));
+	}
 }
 
 
@@ -62,11 +95,10 @@ int main(int argc, char *argv[]) {
 	}
 
 	double *serialTimes = (double *)malloc(NUM_TESTS * sizeof(double));
+	runSerial(*mA, *mB, mC, serialTimes);
 
-	if (!runSerial(*mA, *mB, mC, serialTimes)) {
-		printf("Error running serial tests.\n");
-		return -1;
-	}
+	double *ompTimes = (double *)malloc(NUM_TESTS * sizeof(double));
+	runOmp(*mA, *mB, mC);
 
 	// MATRIX* mC;
 
@@ -116,7 +148,7 @@ int main(int argc, char *argv[]) {
 
 	int i;
 	for (i = 0; i < NUM_TESTS; i++)
-		printf("%5lf ", *(serialTimes + i));
+		printf("%15lf ", *(serialTimes + i));
 	printf("\n");
 
 	return 0;
