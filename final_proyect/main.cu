@@ -49,7 +49,7 @@ void runOmp(const MATRIX mA, const MATRIX mB, MATRIX* mC, double* times) {
 	double totalTime;
 	for (; i < NUM_TESTS; i++) {
 		start = clock();
-		#pragma omp parallel num_threads(totalThreads) shared(workPerThread, mA, mB, mC)
+		#pragma omp parallel num_threads(totalThreads) shared(workPerThread, &mA, &mB, mC)
 		{
 			int startPos = omp_get_thread_num() * workPerThread;
 			int endPos = startPos + workPerThread;
@@ -57,8 +57,8 @@ void runOmp(const MATRIX mA, const MATRIX mB, MATRIX* mC, double* times) {
 			multiplyMatrix(
 				/* startPos */	startPos,
 				/* endPos */	endPos,
-				/* matrix A */	mA,
-				/* matrix B */	mB,
+				/* matrix A */	*mA,
+				/* matrix B */	*mB,
 				/* matrix C */	mC);
 		}
     	end = clock();
