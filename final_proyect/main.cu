@@ -174,7 +174,6 @@ int main(int argc, char *argv[]) {
 
 	double *serialTimes = (double *)malloc(NUM_TESTS * sizeof(double));
 	runSerial(*mA, *mB, mC, serialTimes);
-	printMatrix(*mC, 'C');
 
 	double *ompTimes = (double *)malloc(NUM_TESTS * sizeof(double));
 	runOmp(mA, mB, mCParallel, ompTimes, *mC);
