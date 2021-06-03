@@ -206,7 +206,7 @@ int main(int argc, char *argv[]) {
 	double cudaAvg = cudaSum / NUM_TESTS;
 	printf("%20s %20lf %20lf %20lf", "Promedio", serialAvg, ompAvg, cudaAvg);
 	printf("\n");
-	printf("%20s %20lf %20lf %20lf", "% vs Serial", "-", ompAvg / serialAvg, cudaAvg / serialAvg);
+	printf("%20s %20s %20lf %20lf", "% vs Serial", "-", ompAvg / serialAvg, cudaAvg / serialAvg);
 	printf("\n");
 
 	return 0;
