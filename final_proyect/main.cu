@@ -172,11 +172,11 @@ void printComparison(double *serialTimes, double *ompTimes, double *cudaTimes) {
 	}
 
 	if (ompAvg < serialAvg && ompAvg < cudaAvg) {
-		printf("Serial was fastest.\n");
+		printf("OMP was fastest.\n");
 	}
 
 	if (cudaAvg < serialAvg && cudaAvg < ompAvg) {
-		printf("Serial was fastest.\n");
+		printf("CUDA was fastest.\n");
 	}
 }
 
