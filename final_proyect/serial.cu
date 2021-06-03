@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
 
 	if (DEBUG) {
 		printf("Matrix B Transposed: \n");
-		printMatrix(*mBT, 'BT');
+		printMatrix(*mBT, 'T');
 	}
 
 	// MATRIX* mC;
