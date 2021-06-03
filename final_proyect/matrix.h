@@ -208,7 +208,7 @@ bool initializeInputMatrixes(
 			argv, MatrixAFileNameArgPos,
 			MatrixARowsArgPos, MatrixAColsArgPos,CUDA)) == NULL) {
 		printf("Error allocating matrix A.\n");
-		return false;
+		return false;1
 	}
 
 	if (DEBUG)
@@ -241,4 +241,32 @@ bool initializeInputMatrixes(
 	}
 
 	return true;
+}
+
+MATRIX* transposeMatrix(const MATRIX matrix, const bool CUDA) {
+	MATRIX* transposed;
+	if (CUDA)
+		cudaMallocManaged(&transposed, sizeof(int));
+	else
+		transposed = (MATRIX *)malloc(sizeof(MATRIX));
+
+	transposed->rows = matrix.cols;
+	transposed->cols = matrix.cols;
+	transposed->fileName = strdup(matirxx.fileName);
+
+	if (CUDA)
+		cudaMallocManaged(&transposed->vals, transposed->rows * transposed->cols * sizeof(double));
+	else
+		transposed->vals = (double *)calloc(transposed->rows * transposed->cols, sizeof(double));
+
+
+	int pos = 0;
+	for (; pos < transposed.rows * transposed.cols; pos++) {
+		int row = pos / transposed.rows;
+		int col = pos % transposed.cols;
+
+		*(output->vals + pos) = matrixValue(matrix, col, row);
+	}
+
+	return transposed;
 }

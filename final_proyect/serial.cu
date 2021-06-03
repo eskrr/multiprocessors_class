@@ -18,6 +18,13 @@ int main(int argc, char *argv[]) {
 	if (!initializeInputMatrixes(argc, argv, &mA, &mB, DEBUG, false))
 		return -1;
 
+	MATRIX *mBT = transposeMatrix(*mB);
+
+	if (DEBUG) {
+		printf("Matrix B Transposed: \n");
+		printMatrix(*mBT);
+	}
+
 	// MATRIX* mC;
 
 	// if  ((mC = initializeOutputMatrix(*mA, *mB, false)) == NULL) {
