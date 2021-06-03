@@ -12,7 +12,7 @@
 #define MatrixBRowsArgPos 5
 #define MatrixBColsArgPos 6
 
-#define EPSILON 0.000001
+#define EPSILON 0.0000000001
 
 typedef struct MATRIX {
 	char* fileName;
