@@ -172,6 +172,8 @@ int main(int argc, char *argv[]) {
 	double *cudaTimes = (double *)malloc(NUM_TESTS * sizeof(double));
 	runCuda(mA, mB, mC, cudaTimes);
 
+	runOnceAndSave(*mA, *mB, mC);
+
 	freeMatrix(mA, CUDA);
 	freeMatrix(mB, CUDA);
 	freeMatrix(mC, CUDA);
