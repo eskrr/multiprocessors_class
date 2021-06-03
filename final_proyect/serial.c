@@ -77,8 +77,8 @@ int main(int argc, char *argv[]) {
 	// 	printf("Matrix verified!!!\n");
 	// }
 
-	freeMatrix(mA);
-	freeMatrix(mB);
+	freeMatrix(mA, false);
+	freeMatrix(mB), false;
 	// freeMatrix(mC);
 
 	return 0;
