@@ -251,7 +251,7 @@ MATRIX* transposeMatrix(const MATRIX matrix, const bool CUDA) {
 		transposed = (MATRIX *)malloc(sizeof(MATRIX));
 
 	transposed->rows = matrix.cols;
-	transposed->cols = matrix.cols;
+	transposed->cols = matrix.rows;
 	transposed->fileName = strdup(matrix.fileName);
 
 	if (CUDA)
