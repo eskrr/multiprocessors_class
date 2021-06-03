@@ -265,7 +265,7 @@ MATRIX* transposeMatrix(const MATRIX matrix, const bool CUDA) {
 		int row = pos / transposed->rows;
 		int col = pos % transposed->cols;
 
-		*(transposed->vals + pos) = matrixValue(matrix, col, row);
+		*(transposed->vals + pos) = *(matrixValue(matrix, col, row));
 	}
 
 	return transposed;
