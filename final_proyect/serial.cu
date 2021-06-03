@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
 	multiplyMatrix(
 		/* startPos */ 	0,
 		/* endPos */ 	mC->rows * mC->cols,
-		 matrix A 	*mA,
+		/* matrix A */ 	*mA,
 		/* matrix B */ 	*mB,
 		/* matrix C */ 	mC);
     end = clock();
