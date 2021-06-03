@@ -188,11 +188,16 @@ int main(int argc, char *argv[]) {
 	freeMatrix(mC, CUDA);
 	freeMatrix(mCParallel, CUDA);
 
-	printf("%20s %20s %20s\n", "SERIAL", "OMP", "CUDA");
+	printf("%20s %20s %20s %20s\n", "RUN", "SERIAL", "OMP", "CUDA");
 
 	int i;
-	for (i = 0; i < NUM_TESTS; i++)
-		printf("%20lf %20lf %20lf\n", *(serialTimes + i), *(ompTimes + i), *(cudaTimes + i));
+	double serialSum = 0.0, ompSum = 0.0, cudaSum = 0.0;
+	for (i = 0; i < NUM_TESTS; i++) {
+		serialSum += *(serialTimes + i);
+		ompSum += *(ompTimes + i);
+		cudaTimes += *(cudaTimes + i);
+		printf("%20d %20lf %20lf %20lf\n", i, *(serialTimes + i), *(ompTimes + i), *(cudaTimes + i));
+	}
 
 	printf("\n");
 
