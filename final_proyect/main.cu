@@ -172,7 +172,7 @@ int main(int argc, char *argv[]) {
 
 	int i;
 	for (i = 0; i < NUM_TESTS; i++)
-		printf("%20lf %20lf \n", *(serialTimes + i), *(ompTimes + i), *(cudaTimes + i));
+		printf("%20lf %20lf %20lf\n", *(serialTimes + i), *(ompTimes + i), *(cudaTimes + i));
 
 	printf("\n");
 
