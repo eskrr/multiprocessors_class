@@ -108,8 +108,9 @@ int main(int argc, char *argv[]) {
  // 	double totalTime = (double)(end - start) / CLOCKS_PER_SEC;
  //    printf("Total time taken by CPU: %lf\n", end - start); 
 
-	freeMatrix(mA, false);
-	freeMatrix(mB, false);
+	freeMatrix(mA, CUDA);
+	freeMatrix(mB, CUDA);
+	freeMatrix(mC, CUDA);
 
 	int i;
 	for (i = 0; i < NUM_TESTS; i++)
