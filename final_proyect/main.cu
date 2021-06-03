@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <time.h>
 #include <string.h>
+#include "omp.h"
 #include "matrix.h"
 
 #define DEBUG false
