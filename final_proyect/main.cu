@@ -135,7 +135,7 @@ void saveMatrix(const MATRIX mC) {
 
 	int i = 0;
 	for (; i < mC.rows * mC.cols; i++) {
-		fprintf(fp, "%lf\n", *(mC.vals + i));
+		fprintf(fp, "%0.10lf\n", *(mC.vals + i));
 	}
 
 	fclose(fp);
@@ -198,15 +198,15 @@ int main(int argc, char *argv[]) {
 		serialSum += *(serialTimes + i);
 		ompSum += *(ompTimes + i);
 		cudaSum += *(cudaTimes + i);
-		printf("%20d %20lf %20lf %20lf\n", i + 1, *(serialTimes + i), *(ompTimes + i), *(cudaTimes + i));
+		printf("%20d %20.10lf %20.10lf %20.10lf\n", i + 1, *(serialTimes + i), *(ompTimes + i), *(cudaTimes + i));
 	}
 
 	double serialAvg = serialSum / NUM_TESTS;
 	double ompAvg = ompSum / NUM_TESTS;
 	double cudaAvg = cudaSum / NUM_TESTS;
-	printf("%20s %20lf %20lf %20lf", "Promedio", serialAvg, ompAvg, cudaAvg);
+	printf("%20s %20.10lf %20.10lf %20.10lf", "Promedio", serialAvg, ompAvg, cudaAvg);
 	printf("\n");
-	printf("%20s %20lf %20lf %20lf", "% vs Serial", serialAvg / serialAvg, ompAvg / serialAvg, cudaAvg / serialAvg);
+	printf("%20s %20.10lf %20.10lf %20.10lf", "% vs Serial", serialAvg / serialAvg, ompAvg / serialAvg, cudaAvg / serialAvg);
 	printf("\n");
 
 	return 0;
