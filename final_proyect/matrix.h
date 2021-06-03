@@ -261,12 +261,14 @@ MATRIX* transposeMatrix(const MATRIX matrix, const bool CUDA) {
 
 
 	int pos = 0;
+	printf("total rows: %d, total cols: %d\n", transposed->rows, transposed->cols);
 	for (; pos < transposed->rows * transposed->cols; pos++) {
 		int row = pos / transposed->rows;
 		int col = pos % transposed->cols;
 
 		double *val = matrixValue(matrix, col, row);
-		printf("(r: %d, c: %d): %d\n", row, col, *val);
+
+		printf("%d: (r: %d, c: %d): %d\n", pos, row, col, *val);
 
 		*(transposed->vals + pos) = *val;
 	}
