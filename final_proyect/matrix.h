@@ -62,7 +62,7 @@ MATRIX* initializeOutputMatrix(
 	else
 		output = (MATRIX *)malloc(sizeof(MATRIX));
 
-	if (m == NULL)
+	if (output == NULL)
 		return NULL;
 
 	if (mA.cols != mB.rows) {
