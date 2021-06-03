@@ -147,9 +147,12 @@ int main(int argc, char *argv[]) {
 	freeMatrix(mB, CUDA);
 	freeMatrix(mC, CUDA);
 
+	printf("%20s %20s %20s\n", "SERIAL", "OMP", "CUDA");
+
 	int i;
 	for (i = 0; i < NUM_TESTS; i++)
-		printf("%15lf ", *(serialTimes + i));
+		printf("%20lf %20lf \n", *(serialTimes + i), *(ompTimes + i));
+
 	printf("\n");
 
 	return 0;
