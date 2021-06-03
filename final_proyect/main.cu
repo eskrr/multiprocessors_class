@@ -54,11 +54,11 @@ void runOmp(const MATRIX mA, const MATRIX mB, MATRIX* mC, double* times) {
 			int endPos = startPos + workPerThread;
 
 			multiplyMatrix(
-				/* startPos */ startPos,
-				/* endPos */ endPos,
-				/* matrix A */ *mA,
-				/* matrix B */ *mB,
-				/* matrix C */ mC);
+				/* startPos */	startPos,
+				/* endPos */	endPos,
+				/* matrix A */	mA,
+				/* matrix B */	mB,
+				/* matrix C */	mC);
 		}
     	end = clock();
 
