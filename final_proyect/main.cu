@@ -11,12 +11,7 @@
 
 clock_t start, end;
 
-bool runSerial(const MATRIX mA, const MATRIX mB, double* time) {
-	MATRIX* mC;
-	if  ((mC = initializeOutputMatrix(mA, mB, CUDA)) == NULL) {
-		printf("Error allocating output matrix C.\n");
-		return false;
-	}
+bool runSerial(const MATRIX mA, const MATRIX mB, MATRIX* mC, double* time) {
 
 	clock_t start, end;
 	int i = 0;
@@ -35,8 +30,6 @@ bool runSerial(const MATRIX mA, const MATRIX mB, double* time) {
     	memset(mC->vals, 0, (mC->rows * mC->cols)*sizeof(double));
 	}
 
-	freeMatrix(mC, CUDA);
-
 	return true;
 }
 
@@ -48,6 +41,12 @@ int main(int argc, char *argv[]) {
 	MATRIX *mA, *mB;
 	if (!initializeInputMatrixes(argc, argv, &mA, &mB, DEBUG, CUDA))
 		return -1;
+
+	MATRIX* mC;
+	if  ((mC = initializeOutputMatrix(mA, mB, CUDA)) == NULL) {
+		printf("Error allocating output matrix C.\n");
+		return false;
+	}
 
 	MATRIX *mBT = transposeMatrix(*mB, CUDA);
 
@@ -62,7 +61,7 @@ int main(int argc, char *argv[]) {
 
 	double *serialTimes = (double *)malloc(NUM_TESTS * sizeof(double));
 
-	if (!runSerial(*mA, *mB, serialTimes)) {
+	if (!runSerial(*mA, *mB, mC, serialTimes)) {
 		printf("Error running serial tests.\n");
 		return -1;
 	}
