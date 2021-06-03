@@ -80,8 +80,8 @@ void runOmp(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times, const MATRIX mCSe
 	}
 }
 
-__global__ void calculateMatrixCuda(int *workPerThread, MATRIX* mA, MATRIX* mB, MATRIX* mC) {
-	int idx = blockIdx.x * blockDim.x + threadIdx.x;  // Calculate index for each thread
+__global__ void calculateMatrixCuda(int *workPerThread, MATRIX* mA, MATRIX* mB, MATRIX* mC, int offset) {
+	int idx = blockIdx.x * blockDim.x + threadIdx.x + offset;  // Calculate index for each thread
 	int pos = idx * *workPerThread;
 	int endPos = pos + *workPerThread;
 
@@ -112,13 +112,19 @@ void runCuda(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times, const MATRIX mCS
 
 	int totalWork = mC->rows * mC->cols;
 	*workPerThread = totalWork / (totalBlocks * totalRows);
-	printf("%d, %d\n", workPerThread, totalWork % (totalBlocks * totalRows));
+
+	int *workLeft;
+	cudaMallocManaged(&workLeft, sizeof(int));
+	workLeft = *(totalWork % (totalBlocks * totalRows));
+	printf("%d, %d\n", *workPerThread, totalWork % (totalBlocks * totalRows));
 
 	double totalTime;
 	for (; i < NUM_TESTS; i++) {
 		start = clock();
 
-		calculateMatrixCuda <<<totalBlocks, totalRows>>> (workPerThread, mA, mB, mC);
+		calculateMatrixCuda <<<totalBlocks, totalRows>>> (workPerThread, mA, mB, mC, 0);
+		if (workLeft)
+			calculateMatrixCuda <<<1, workLeft>>> (workPerThread, mA, mB, mC, totalRows * totalBlocks);
 		cudaDeviceSynchronize();
 
     	end = clock();
@@ -134,6 +140,9 @@ void runCuda(MATRIX* mA, MATRIX* mB, MATRIX* mC, double* times, const MATRIX mCS
 
     	memset(mC->vals, 0, (mC->rows * mC->cols)*sizeof(double));
 	}
+
+	cudaFree(workPerThread);
+	cudaFree(workLeft);
 }
 
 void saveMatrix(const MATRIX mC) {
