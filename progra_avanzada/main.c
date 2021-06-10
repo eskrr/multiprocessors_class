@@ -55,7 +55,7 @@ void readSequences(char* fileName, char*** sequences, int* totalSeqs) {
 
 
 	fpos_t currentPos, prevPos;
-	prevPos = fgetpos(fp, &currentPos);
+	fgetpos(fp, &currentPos);
 	*totalSeqs = 0;
 	int reallocCount = 0;
 
