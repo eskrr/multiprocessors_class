@@ -65,7 +65,7 @@ void readSequences(char* fileName, char*** sequences, int* totalSeqs) {
 
 		fgetpos(fp, &currentPos);
 		// printf("%lld - %lld\n: %d\n", prevPos, currentPos, totalSeqs);
-		*(*sequences  + *totalSeqs) = malloc(sizeof(char) * (currentPos - prevPos));
+		*(*sequences  + *totalSeqs) = malloc(sizeof(char) * ((int)currentPos - (int)prevPos));
 
 		fsetpos(fp, &prevPos);
 		fscanf(fp, "%s\n", *(*sequences  + *totalSeqs));
