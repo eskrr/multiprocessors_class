@@ -1,22 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "omp.h"
+#include <pthread.h>
 
 #define MIN_SEQS 100
-#define numRefs 5
-
-char seq[] = "ACAAGATGCCATTGTCCCCCGGCCTCCTGCTGCTGCTGCTCTCCGGGGCCACGGCCACCGCTGCCCTGCCCCTGGAGGGTGGCCCCACCGGCCGAGACAGCGAGCATATGCAGGAAGCGGCAGGAATAAGGAAAAGCAGCCTCCTGACTTTCCTCGCTTGGTGGTTTGAGTGGACCTCCCAGGCCAGTGCCGGGCCCCTCATAGGAGAGGAAGCTCGGGAGGTGGCCAGGCGGCAGGAAGGCGCACCCCCCCAGCAATCCGCGCGCCGGGACAGAATGCCCTGCAGGAACTTCTTCTGGAAGACCTTCTCCTCCTGCAAATAAAACCTCACCCATGAATGCTCACGCAAGTTTAATTACAGACCTGAA";
-char *refs[] = {
-	"GCCTCCTGCTGCTGCTGCTCTCC", // 21
-	"GGACCTCCCAGGCCAGTGCCGGG", // 171
-	"AAGACCTTCTCCTCCTGCAAATA", // 299
-	"TTCTTCTGGAAGACCTTCTCCTC", // 290 
-	"CCAGGCGGCAGGAAGGCGCACCCCCCCAGCAATCCGTGCGCCGG",
-};
-
+#define NUM_THREADS 8
 
 char* reference;
+char** sequences;
+
+typedef struct mapSequenceToReferenceArgs {
+	int threadId;
+	char* sequence;
+	int sequenceNum;
+} mapSequenceToReferenceArgs;
+
+typedef struct mapSequencesToReferenceArgs {
+	int threadId;
+	char** sequences;
+	int totalSeqs;
+} mapSequencesToReferenceArgs;
 
 void uploadReference(char* fileName) {
 	FILE* fp = fopen(fileName, "r");
@@ -46,90 +49,210 @@ void readSequences(char* fileName, char*** sequences, int* totalSeqs) {
 	if (!fp)
 		return;
 
-	// Start array size at minimum size.
-	*sequences = malloc(sizeof(char *) * MIN_SEQS);
+	*sequences = malloc(sizeof(char*) * 1000);
 
-	// todo: throw error handling
-	if (!*sequences )
+	if (!*sequences)
 		return;
 
-
 	fpos_t currentPos, prevPos;
-	fgetpos(fp, &currentPos);
+	fgetpos(fp, &prevPos);
 	*totalSeqs = 0;
-	int reallocCount = 0;
+
 
 	while (!feof(fp)) {
 		char* aux = malloc(sizeof(char));
 		fscanf(fp, "%[^\n]c", aux);
 
 		fgetpos(fp, &currentPos);
-		// printf("%lld - %lld\n: %d\n", prevPos, currentPos, totalSeqs);
-		*(*sequences  + *totalSeqs) = malloc(sizeof(char) * ((int)currentPos - (int)prevPos));
+		*(*sequences + *totalSeqs) = malloc(sizeof(char) * (currentPos - prevPos));
 
 		fsetpos(fp, &prevPos);
-		fscanf(fp, "%s\n", *(*sequences  + *totalSeqs));
+		fscanf(fp, "%s\n", *(*sequences + *totalSeqs));
 
 		(*totalSeqs)++;
 		fgetpos(fp, &prevPos);
+
 		free(aux);
 
-		if (*totalSeqs >= (reallocCount * MIN_SEQS + MIN_SEQS)) {
-			*sequences  = realloc(*sequences , (*totalSeqs + MIN_SEQS) * sizeof(char *));
+		// if (*totalSeqs > 1)
+		// 	break;
+	}
+}
 
-			// throw error handling
-			if (!*sequences)
-				return;
+void *mapSequenceToReferenceImpl(void *vargp) {
+	mapSequenceToReferenceArgs* args;
+	args = (mapSequenceToReferenceArgs*)vargp;
 
-			reallocCount++;
+	int workPerThread = strlen(reference) / NUM_THREADS;
+	int current = args->threadId * workPerThread;
+	int end = current + workPerThread;
+
+	for (; current < end; current++) {
+		// if (current + strlen(args->sequence) > strlen(reference))
+		// 	return NULL;
+		if (memcmp(reference + current, args->sequence, strlen(args->sequence)) == 0) {
+			printf("%d a partir del caracter %d\n", args->sequenceNum, current);
 		}
-	}
-	// free(sequences[0]);
+	}	
+
+	return NULL;
 }
 
-void mapSequencesToReference(char** sequences, int totalSeqs) {
-	int i = 0, j = 0;
-	// for (; i < totalSeqs; i++) {
-	// 	printf("ref %d: %s\n", i, refs[i]);
+void mapSequenceToReference(char* sequence, int sequenceNum) {
+	pthread_t threads[NUM_THREADS];
+	mapSequenceToReferenceArgs args[NUM_THREADS];
+	int threadId;
+
+	for (threadId = 0; threadId < NUM_THREADS; threadId++) {
+    	args[threadId].threadId = threadId;
+    	args[threadId].sequence = sequence;
+    	args[threadId].sequenceNum = sequenceNum;
+    	if (pthread_create(&threads[threadId], NULL, mapSequenceToReferenceImpl, (void*)&args[threadId]) != 0) {
+    		printf("Error!\n");
+    		return;
+    	}
+
+	}
+
+	for (threadId = 0; threadId < NUM_THREADS; threadId++) {
+    	if (pthread_join(threads[threadId], NULL) != 0)
+    		return;
+  	}
+}
+
+void *mapSequencesToReferenceImpl(void *varpg) {
+	mapSequencesToReferenceArgs* args;
+	args = (mapSequencesToReferenceArgs*)varpg;
+
+	int workPerThread = args->totalSeqs / NUM_THREADS;
+	int current = args->threadId * workPerThread;
+	int end = current + workPerThread;
+
+	// printf("Thread: %d (%d -> %d)\n", args->threadId, current, end);
+
+	for (; current < end; current++) {
+		// printf("Current: %d\n", current);
+		mapSequenceToReference(*(args->sequences + current), current);
+	}
+
+	return NULL;
+}
+
+void mapSequencesToReference(char** sequences, const int totalSeqs) {
+	// static int sequenceNum = 0;
+
+	pthread_t threads[NUM_THREADS];
+	mapSequencesToReferenceArgs args[NUM_THREADS];
+	int threadId;
+
+	for (threadId = 0; threadId < NUM_THREADS; threadId++) {
+    	args[threadId].threadId = threadId;
+    	args[threadId].sequences = sequences;
+    	args[threadId].totalSeqs = totalSeqs;
+    	if (pthread_create(&threads[threadId], NULL, mapSequencesToReferenceImpl, (void*)&args[threadId]) != 0) {
+    		printf("Error!\n");
+    		return;
+    	}
+
+	}
+
+	for (threadId = 0; threadId < NUM_THREADS; threadId++) {
+    	if (pthread_join(threads[threadId], NULL) != 0)
+    		return;
+  	}
+
+  	// sequenceNum++;
+
+
+	// FILE* fp = fopen(sequencesFileName, "r");
+
+	// if (!fp)
+	// 	return;
+
+	// char *sequence;
+
+	// fpos_t currentPos, prevPos;
+	// fgetpos(fp, &prevPos);
+	// int totalSeqs = 0;
+
+	// while (!feof(fp)) {
+	// 	char* aux = malloc(sizeof(char));
+	// 	fscanf(fp, "%[^\n]c", aux);
+
+	// 	fgetpos(fp, &currentPos);
+	// 	sequence = malloc(sizeof(char) * (currentPos - prevPos));
+
+	// 	fsetpos(fp, &prevPos);
+	// 	fscanf(fp, "%s\n", sequence);
+
+	// 	totalSeqs++;
+	// 	fgetpos(fp, &prevPos);
+
+	// 	mapSequenceToReference(sequence);
+
+	// 	free(aux);
+	// 	free(sequence);
+
+	// 	if (totalSeqs > 2)
+	// 		break;
 	// }
-
-	for (i = 0; i < strlen(reference); i++) {
-		printf("%d\n", i);
-		// for (j = 0; j < totalSeqs; j++) {
-		// 	if (i + strlen(sequences[j]) > strlen(reference))
-		// 		continue;
-		// 	if (memcmp(reference + i, sequences[j], strlen(sequences[j])) == 0) {
-		// 		printf("%s a partir del caracter %d\n", sequences[j], i);
-		// 	}
-		// }
-	}
 }
+
+// void mapSequencesToReference(char* sequencesFileName) {
+// 	FILE* fp = fopen(sequencesFileName, "r");
+
+// 	if (!fp)
+// 		return;
+
+// 	while (!feof(fp)) {
+
+// 	}
+// 	// int i = 0, j = 0;
+// 	// for (; i < totalSeqs; i++) {
+// 	// 	printf("ref %d: %s\n", i, refs[i]);
+// 	// }
+
+// 	// for (i = 0; i < strlen(reference) / 16; i++) {
+// 		// printf("%d\n", i);
+// 		// for (j = 0; j < totalSeqs; j++) {
+// 		// 	if (i + strlen(sequences[j]) > strlen(reference))
+// 		// 		continue;
+// 		// 	if (memcmp(reference + i, sequences[j], strlen(sequences[j])) == 0) {
+// 		// 		printf("%s a partir del caracter %d\n", sequences[j], i);
+// 		// 	}
+// 		// }
+// 	// }
+
+// 	// pthread_t* threads;
+
+// 	// for (coreNum = 0; coreNum < virtualCores; coreNum++) {
+//  //      coreNums[coreNum] = coreNum;
+//  //      pthread_create(&tid[coreNum], NULL, calculatePi, (void *)&coreNums[coreNum]);
+//  //  	}
+
+// }
 
 int main() {
-	printf("%d\n", omp_get_max_threads());
+	uploadReference("reference.seq");
 
-	// printf("Sequence: %s\n", seq);
+	char** sequences;
+	int totalSeqs;
 
 
-	// uploadReference("reference.seq");
-	// char** seqs;
-	// int totalSeqs;
+	readSequences("sequences.seq", &sequences, &totalSeqs);
 
-	// readSequences("sequences.seq", &seqs, &totalSeqs);
+	mapSequencesToReference(sequences, totalSeqs);
 
-	// mapSequencesToReference(seqs, totalSeqs);
+	free(reference);
 
-	// int i;
-	// // printf("Total length: %d\n", totalSeqs);
-	// for (i = 0; i < totalSeqs; i++) {
-	// 	// if (i < 5)
-	// 	// 	printf("%s\n", seqs[i]);
-	// 	free(seqs[i]);
-	// }
+	int i = 0;
+	for (;i < totalSeqs; i++) {
+		// printf("%s\n", sequences[i]);
+		free(sequences[i]);
+	}
 
-	// free(seqs);
+	free(sequences);
 
-	// free(reference);
 
 	return 1;
 }
